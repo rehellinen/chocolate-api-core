@@ -7,7 +7,7 @@ import Koa from 'koa'
 import R from 'ramda'
 import chalk from 'chalk'
 import portfinder from 'portfinder'
-import { r, getConfig, warn, coreConfig, error } from '../utils'
+import { rCore, rRoot, getConfig, warn, coreConfig, error } from '../utils'
 import { Controller } from './Controller'
 import { Model } from './Model'
 import { LibsNotFound } from '../exception'
@@ -27,7 +27,8 @@ export class Server {
   // 监听端口
   port = process.env.PORT || config.PORT || 3000
 
-  constructor () {
+  constructor ({ root } = {}) {
+    global.__root = root
     if (config.CORS.OPEN) {
       this.middlewares.splice(1, 0, 'cors')
     }
@@ -36,8 +37,8 @@ export class Server {
   async start () {
     try {
       // 添加中间件，先添加框架的中间件，再添加用户自定义的
-      this.useMiddlewares(coreConfig.DIR.MIDDLEWARE)(this.middlewares)
-      this.useMiddlewares(config.DIR.MIDDLEWARE)(config.MIDDLEWARE || [])
+      this.useMiddlewares(rCore(coreConfig.DIR.MIDDLEWARE))(this.middlewares)
+      this.useMiddlewares(rRoot(config.DIR.MIDDLEWARE))(config.MIDDLEWARE || [])
       // 初始化框架类库
       this.initLibs()
       // 判断端口号是否占用
@@ -70,7 +71,7 @@ export class Server {
 
   useMiddlewares (path) {
     return R.map(R.pipe(
-      item => `${r(path)}/${item}`,
+      item => `${path}/${item}`,
       require,
       R.map(item => item(this.app))
     ))

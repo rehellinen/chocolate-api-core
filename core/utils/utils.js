@@ -11,11 +11,22 @@ import getRawBody from 'raw-body'
 import chalk from 'chalk'
 
 /**
- * 以src为根目录
+ * 从项目根目录开始寻找
  * @param paths
  * @returns {string}
  */
-export const r = (...paths) => resolve(__dirname, '../../', ...paths)
+export const rRoot = (...paths) => {
+  return global.__root
+    ? resolve(__root, ...paths)
+    : resolve(__dirname, '../../../../', ...paths)
+}
+
+/**
+ * 从核心库根目录开始寻找
+ * @param paths
+ * @returns {string}
+ */
+export const rCore = (...paths) => resolve(__dirname, '../', ...paths)
 
 /**
  * 解析XML

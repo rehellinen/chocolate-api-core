@@ -3,10 +3,11 @@
  *  Create By rehellinen
  *  Create On 2019/3/19 22:00
  */
-import baseConf from '../../config/base.conf'
-import devConf from '../../config/dev.conf'
-import prodConf from '../../config/prod.conf'
-import { isProduction } from './utils'
+import {isProduction, rRoot} from './utils'
+
+const baseConf = require(rRoot('config/base.conf'))['default']
+const devConf = require(rRoot('config/dev.conf'))['default']
+const prodConf = require(rRoot('config/prod.conf'))['default']
 
 const config = {
   ...baseConf,
@@ -15,7 +16,7 @@ const config = {
 
 export const coreConfig = {
   DIR: {
-    MIDDLEWARE: 'core/middleware'
+    MIDDLEWARE: 'middleware'
   }
 }
 
