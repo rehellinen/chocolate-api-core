@@ -3,7 +3,7 @@
  *  Create By rehellinen
  *  Create On 2019/3/19 22:00
  */
-import {isProduction, rRoot} from './utils'
+import { isProduction, rRoot } from './utils'
 
 const baseConf = require(rRoot('config/base.conf'))['default']
 const devConf = require(rRoot('config/dev.conf'))['default']

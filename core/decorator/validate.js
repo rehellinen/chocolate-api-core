@@ -1,4 +1,4 @@
-import {firstUpperCase, getConfig, isClass, isFunction, rRoot} from '../utils'
+import { firstUpperCase, getConfig, isClass, isFunction, rRoot } from '../utils'
 import { middleware } from './decorator'
 import { LibsNotFound } from '../exception'
 
