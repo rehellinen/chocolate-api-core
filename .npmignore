@@ -3,6 +3,7 @@ node_modules
 dist
 debug.log
 upload
+.babelrc.js
 .editorconfig
 .eslintrc.js
 .gitignore
