@@ -1,0 +1,8 @@
+.idea
+node_modules
+dist
+debug.log
+upload
+.editorconfig
+.eslintrc.js
+.gitignore
