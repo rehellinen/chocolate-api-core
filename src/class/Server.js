@@ -27,8 +27,7 @@ export class Server {
   // 监听端口
   port = process.env.PORT || config.PORT || 3000
 
-  constructor ({ root } = {}) {
-    global.__root = root
+  constructor () {
     if (config.CORS.OPEN) {
       this.middlewares.splice(1, 0, 'cors')
     }

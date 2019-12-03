@@ -16,9 +16,7 @@ import chalk from 'chalk'
  * @returns {string}
  */
 export const rRoot = (...paths) => {
-  return global.__root
-    ? resolve(__root, ...paths)
-    : resolve(__dirname, '../../../../', ...paths)
+  return resolve(process.cwd(), ...paths)
 }
 
 /**
