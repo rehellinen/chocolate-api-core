@@ -4,8 +4,9 @@
   "description": "a API framework based on Koa2",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rimraf dist && babel ./core --out-dir ./dist",
-    "lint": "eslint ./core --fix"
+    "build": "rimraf dist && babel ./src --out-dir ./dist",
+    "lint": "eslint ./src --fix",
+    "commit": "git-cz"
   },
   "author": "rehellinen",
   "license": "ISC",
@@ -45,5 +46,10 @@
     "raw-body": "^2.4.0",
     "validator": "^11.1.0",
     "x2js": "^3.3.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
