@@ -1,6 +1,6 @@
 .idea
 node_modules
-core
+src
 debug.log
 upload
 .babelrc.js
