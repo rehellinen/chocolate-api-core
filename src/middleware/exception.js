@@ -1,5 +1,6 @@
-import { types, getConfig } from '../utils'
+import { types } from '../utils'
 import { Exception } from '../exception'
+import { config } from '../class'
 
 export const exception = (app) => {
   const processError = (e, ctx) => {
@@ -9,7 +10,7 @@ export const exception = (app) => {
       ctx.body = e.getError()
       ctx.body.request = `${ctx.method} ${ctx.url}`
     } else {
-      if (getConfig().DEBUG) {
+      if (config.getConfig('debug')) {
         console.log(e)
         ctx.status = 500
         ctx.type = types.json

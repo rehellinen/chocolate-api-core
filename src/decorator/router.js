@@ -3,8 +3,10 @@
  *  Create By rehellinen
  *  Create On 2018/10/25 23:19
  */
-import { firstUpperCase, getConfig, isClass, rRoot } from '../utils'
+import { firstUpperCase, isClass, rRoot } from '../utils'
 import { LibsNotFound } from '../exception'
+import { config } from '../class'
+
 // 记录路由信息
 export const routerMap = new Map()
 
@@ -55,7 +57,7 @@ const baseMethod = ({ path = '', method }) => {
 const getController = (str = '') => {
   const [controller, action] = str.split('.')
   const name = firstUpperCase(controller)
-  const path = rRoot(getConfig('dir.controller'), `${name}.js`)
+  const path = rRoot(config.getConfig('dir.controller'), `${name}.js`)
   let file
   try {
     file = require(path)

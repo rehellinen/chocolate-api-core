@@ -7,12 +7,11 @@ import Koa from 'koa'
 import R from 'ramda'
 import chalk from 'chalk'
 import portfinder from 'portfinder'
-import { rCore, rRoot, getConfig, warn, coreConfig, error } from '../utils'
+import { rCore, rRoot, warn, error } from '../utils'
 import { Controller } from './Controller'
 import { Model } from './Model'
 import { LibsNotFound } from '../exception'
-
-const config = getConfig()
+import { config } from './Config'
 
 export class Server {
   // Koa2实例
@@ -22,13 +21,13 @@ export class Server {
   middlewares = ['exception', 'response', 'router']
 
   // 监听IP
-  host = process.env.HOST || config.HOST || '127.0.0.1'
+  host = process.env.HOST || config.getConfig('host') || '127.0.0.1'
 
   // 监听端口
-  port = process.env.PORT || config.PORT || 3000
+  port = process.env.PORT || config.getConfig('port') || 3000
 
   constructor () {
-    if (config.CORS.OPEN) {
+    if (config.getConfig('cors.open')) {
       this.middlewares.splice(1, 0, 'cors')
     }
   }
@@ -36,8 +35,12 @@ export class Server {
   async start () {
     try {
       // 添加中间件，先添加框架的中间件，再添加用户自定义的
-      this.useMiddlewares(rCore(coreConfig.DIR.MIDDLEWARE))(this.middlewares)
-      this.useMiddlewares(rRoot(config.DIR.MIDDLEWARE))(config.MIDDLEWARE || [])
+      this.useMiddlewares(
+        rCore('middleware')
+      )(this.middlewares)
+      this.useMiddlewares(
+        rRoot(config.getConfig('DIR.MIDDLEWARE'))
+      )(config.getConfig('MIDDLEWARE') || [])
       // 初始化框架类库
       this.initLibs()
       // 判断端口号是否占用
@@ -54,9 +57,10 @@ export class Server {
   initLibs () {
     // 初始化Controller
     Controller.prototype.app = this.app
-    Controller.prototype.config = getConfig()
+    Controller.prototype.config = config.getConfig()
     // 初始化Model
-    Model.prototype.config = getConfig()
+    Model.prototype.config = config.getConfig()
+    Model.prototype.modelConfig = config.getConfig('model')
   }
 
   async checkPort () {

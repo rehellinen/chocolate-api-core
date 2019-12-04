@@ -1,12 +1,13 @@
-import { firstUpperCase, getConfig, isClass, isFunction, rRoot } from '../utils'
+import { firstUpperCase, isClass, isFunction, rRoot } from '../utils'
 import { middleware } from './decorator'
 import { LibsNotFound } from '../exception'
+import { config } from '../class'
 
 export const validateMap = new Map()
 
 export const validate = (name, scene) => {
   name = firstUpperCase(name)
-  const path = rRoot(getConfig('dir.validate'), `${name}.js`)
+  const path = rRoot(config.getConfig('dir.validate'), `${name}.js`)
   let file
   try {
     file = require(path)

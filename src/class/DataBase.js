@@ -5,7 +5,7 @@
  */
 import Knex from 'knex'
 import Bookshelf from 'bookshelf'
-import { getConfig } from '../utils'
+import { config } from './Config'
 
 export class DataBase {
   static getInstance () {
@@ -18,7 +18,7 @@ export class DataBase {
   static _connect () {
     const knex = Knex({
       client: 'mysql',
-      connection: getConfig('database')
+      connection: config.getConfig('database')
     })
 
     this.db = Bookshelf(knex)

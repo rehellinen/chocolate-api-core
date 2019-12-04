@@ -5,9 +5,7 @@
  */
 import { DataBase } from './DataBase'
 import { DatabaseException } from '../exception'
-import { camelCase, getConfig, snakeCase } from '../utils'
-
-const config = getConfig('model')
+import { camelCase, snakeCase } from '../utils'
 
 export class Model {
   // 唯一的db实例
@@ -105,7 +103,7 @@ export class Model {
     this._processOrder(model, order)
 
     const data = await model.fetchPage({
-      pageSize: pageConf.pageSize || config.PAGE_SIZE,
+      pageSize: pageConf.pageSize || this.modelConfig.PAGE_SIZE,
       page: pageConf.page || 1,
       withRelated: relation
     })
@@ -168,7 +166,7 @@ export class Model {
 
     if (!res) {
       let message = '写入数据失败'
-      if (data.status === config.STATUS.DELETED) {
+      if (data.status === this.modelConfig.STATUS.DELETED) {
         message = '删除数据失败'
       }
       throw new DatabaseException({
@@ -201,7 +199,7 @@ export class Model {
   async delete ({ condition = {} }) {
     return this.edit({
       condition,
-      data: { status: config.STATUS.DELETED }
+      data: { status: this.modelConfig.STATUS.DELETED }
     })
   }
 
@@ -239,7 +237,7 @@ export class Model {
    * @private
    */
   _generateModel (modelConf) {
-    const baseConf = config.CONVERT_FIELDS ? {
+    const baseConf = this.modelConfig.CONVERT_FIELDS ? {
       parse (response) {
         for (const [key, value] of Object.entries(response)) {
           const newKey = camelCase(key)

@@ -3,23 +3,21 @@
  *  Create By rehellinen
  *  Create On 2018/10/12 21:24
  */
-import { getConfig } from '../utils'
-import { Token } from '../class'
+import { config, Token } from '../class'
 import { getMapKey, routerMap } from './router'
 import { TokenException } from '../exception'
 
-const config = getConfig('token')
-
 export const auth = (scope) => {
+  const scopeEnum = config.getConfig('token.scope')
   let flag = false
-  for (const value of Object.values(config.SCOPE)) {
+  for (const value of Object.values(scopeEnum)) {
     if (scope === value) {
       flag = true
     }
   }
   // 输入为空
   if (!scope) {
-    scope = config.SCOPE.USER
+    scope = scopeEnum.USER
   }
   // 输入的值非法
   if (!flag) {

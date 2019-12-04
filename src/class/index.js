@@ -1,3 +1,4 @@
+export * from './Config'
 export * from './DataBase'
 export * from './Model'
 export * from './Server'
