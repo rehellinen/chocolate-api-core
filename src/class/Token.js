@@ -41,14 +41,16 @@ export class Token {
   /**
    * 生成access_token
    * @param id 用户ID
+   * @param payload 其他需要保存在JWT的数据
    * @returns {*}
    */
-  getAccessToken (id) {
-    const payload = {
+  getAccessToken (id, payload = {}) {
+    const totalPayload = {
+      ...payload,
       id,
       type: TokenType.ACCESS
     }
-    return jwt.sign(payload, this.secret, {
+    return jwt.sign(totalPayload, this.secret, {
       expiresIn: this.accessExpire
     })
   }
@@ -56,14 +58,16 @@ export class Token {
   /**
    * 生成refresh_token
    * @param id 用户ID
+   * @param payload 其他需要保存在JWT的数据
    * @returns {*}
    */
-  getRefreshToken (id) {
-    const payload = {
+  getRefreshToken (id, payload = {}) {
+    const totalPayload = {
+      ...payload,
       id,
       type: TokenType.REFRESH
     }
-    return jwt.sign(payload, this.secret, {
+    return jwt.sign(totalPayload, this.secret, {
       expiresIn: this.refreshExpire
     })
   }
@@ -73,9 +77,9 @@ export class Token {
    * @param token 令牌
    */
   verify (token) {
-    let decode
+    let decoded
     try {
-      decode = jwt.verify(token, this.secret)
+      decoded = jwt.verify(token, this.secret)
     } catch (error) {
       if (error instanceof TokenExpiredError) {
         throw new ExpiredToken()
@@ -83,6 +87,6 @@ export class Token {
         throw new InvalidToken()
       }
     }
-    return decode
+    return decoded
   }
 }
