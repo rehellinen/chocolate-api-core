@@ -22,17 +22,6 @@ class ParamsException extends Exception {
   }
 }
 
-class TokenException extends Exception {
-  constructor (config) {
-    super(config)
-    this.setDefault({
-      httpCode: 401,
-      status: 30000,
-      message: 'Token已过期或无效'
-    })
-  }
-}
-
 class LibsNotFound extends Exception {
   constructor (config) {
     super(config)
@@ -44,4 +33,4 @@ class LibsNotFound extends Exception {
   }
 }
 
-export { DatabaseException, ParamsException, TokenException, LibsNotFound }
+export { DatabaseException, ParamsException, LibsNotFound }
