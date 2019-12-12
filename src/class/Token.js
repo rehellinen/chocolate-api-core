@@ -3,96 +3,86 @@
  *  Create By rehellinen
  *  Create On 2018/9/28 20:37
  */
-import md5 from 'md5'
-import cache from 'memory-cache'
-import { getRandChars } from '../utils'
-import { TokenException } from '../exception'
+import jwt, { TokenExpiredError } from 'jsonwebtoken'
+import { ExpiredToken, InvalidToken } from '../exception'
 import { config } from './Config'
+import { TokenType } from '../utils'
 
 export class Token {
-  expireTime = config.getConfig('token.expires_in') * 1000
+  // 用于加密的秘钥
+  secret
 
-  /**
-   * 获取Token的主方法
-   * @param scope 权限值
-   * @param expireTime 过期时间（单位为秒）
-   * @param cachedData 需要缓存的数据
-   */
-  get ({ scope, expireTime, cachedData = {} }) {
-    if (expireTime) {
-      this.expireTime = expireTime * 1000
+  // access_token过期时间
+  accessExpire
+
+  // refresh_token过期时间
+  refreshExpire
+
+  // 单例模式
+  static getInstance () {
+    if (!this.instance) {
+      this.instance = new Token()
     }
-    Object.assign({}, cachedData, { scope })
-    return this._saveToCache(cachedData)
+    return this.instance
   }
 
   /**
-   * 验证权限是管理员
-   *  @param ctx
+   * constructor
+   * @param secret 生成Token的密匙
+   * @param accessExpire access_token过期时间
+   * @param refreshExpire refresh_token过期时间
    */
-  static isSuper (ctx) {
-    Token.checkScope(ctx, config.getConfig('token.scope.super'))
+  constructor ({ secret, accessExpire, refreshExpire } = {}) {
+    this.secret = secret || config.get('token.secret')
+    this.accessExpire = accessExpire || config.get('token.access_expires_in')
+    this.refreshExpire = refreshExpire || config.get('token.refresh_expires_in')
   }
 
   /**
-   * 验证权限是否合法
-   * @param ctx
-   * @param scope 权限值
+   * 生成access_token
+   * @param id 用户ID
+   * @returns {*}
    */
-  static checkScope (ctx, scope) {
-    const cachedScope = Token.getSpecifiedValue(ctx, 'scope')
-    if (scope !== cachedScope) {
-      throw new TokenException()
+  getAccessToken (id) {
+    const payload = {
+      id,
+      type: TokenType.ACCESS
     }
+    return jwt.sign(payload, this.secret, {
+      expiresIn: this.accessExpire
+    })
   }
 
   /**
-   * 获取缓存的指定数据
-   * @param ctx
-   * @param key 缓存的键
-   * @return {*}
+   * 生成refresh_token
+   * @param id 用户ID
+   * @returns {*}
    */
-  static getSpecifiedValue (ctx, key) {
-    const info = cache.get(ctx.header.token)
-
-    if (!info || !JSON.parse(info)[key]) {
-      throw new TokenException()
+  getRefreshToken (id) {
+    const payload = {
+      id,
+      type: TokenType.REFRESH
     }
-
-    return JSON.parse(info)[key]
+    return jwt.sign(payload, this.secret, {
+      expiresIn: this.refreshExpire
+    })
   }
 
   /**
-   * 检查Token是否过期
-   * @param ctx
+   * 验证令牌是否合法
+   * @param token 令牌
    */
-  static checkToken (ctx) {
-    const token = cache.get(ctx.header.token)
-    if (!token) {
-      throw new TokenException()
+  verify (token) {
+    let decode
+    try {
+      decode = jwt.verify(token, this.secret)
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        throw new ExpiredToken()
+      } else {
+        throw new InvalidToken()
+      }
     }
-  }
-
-  /**
-   * 生成Token令牌
-   */
-  static _generateToken () {
-    const str = getRandChars(32)
-    const time = new Date().getTime()
-    const prefix = config.getConfig('token.secret')
-
-    return md5(`${str}-${time}-${prefix}`)
-  }
-
-  /**
-   * 保存Token到缓存
-   * @param cachedValue 需要保存的信息
-   */
-  _saveToCache (cachedValue) {
-    const cachedKey = Token._generateToken()
-    cache.put(cachedKey, JSON.stringify(cachedValue),
-      this.expireTime, () => cache.del(cachedKey)
-    )
-    return cachedKey
+    return decode
   }
 }
