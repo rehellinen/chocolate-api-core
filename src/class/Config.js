@@ -14,7 +14,7 @@ export class Config {
    * @param dir 相对路径，相对于process.cwd()
    * @private
    */
-  loadConfig (dir = 'config') {
+  load (dir = 'config') {
     const baseConf = require(rRoot(`${dir}/base.conf`))['default']
     const devConf = require(rRoot(`${dir}/dev.conf`))['default']
     const prodConf = require(rRoot(`${dir}/prod.conf`))['default']
