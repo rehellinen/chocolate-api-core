@@ -25,7 +25,7 @@ export class Config {
   }
 
   // 获取配置
-  getConfig (prefix = '') {
+  get (prefix = '') {
     let res = this.config
     prefix.split('.').forEach(item => {
       if (!item) {

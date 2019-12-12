@@ -10,7 +10,7 @@ export const exception = (app) => {
       ctx.body = e.getError()
       ctx.body.request = `${ctx.method} ${ctx.url}`
     } else {
-      if (config.getConfig('debug')) {
+      if (config.get('debug')) {
         console.log(e)
         ctx.status = 500
         ctx.type = types.json

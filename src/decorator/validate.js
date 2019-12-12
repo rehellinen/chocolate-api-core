@@ -7,7 +7,7 @@ export const validateMap = new Map()
 
 export const validate = (name, scene) => {
   name = firstUpperCase(name)
-  const path = rRoot(config.getConfig('dir.validate'), `${name}.js`)
+  const path = rRoot(config.get('dir.validate'), `${name}.js`)
   let file
   try {
     file = require(path)

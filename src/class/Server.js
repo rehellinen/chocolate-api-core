@@ -21,13 +21,13 @@ export class Server {
   middlewares = ['exception', 'response', 'router']
 
   // 监听IP
-  host = process.env.HOST || config.getConfig('host') || '127.0.0.1'
+  host = process.env.HOST || config.get('host') || '127.0.0.1'
 
   // 监听端口
-  port = process.env.PORT || config.getConfig('port') || 3000
+  port = process.env.PORT || config.get('port') || 3000
 
   constructor () {
-    if (config.getConfig('cors.open')) {
+    if (config.get('cors.open')) {
       this.middlewares.splice(1, 0, 'cors')
     }
   }
@@ -39,8 +39,8 @@ export class Server {
         rCore('middleware')
       )(this.middlewares)
       this.useMiddlewares(
-        rRoot(config.getConfig('DIR.MIDDLEWARE'))
-      )(config.getConfig('MIDDLEWARE') || [])
+        rRoot(config.get('DIR.MIDDLEWARE'))
+      )(config.get('MIDDLEWARE') || [])
       // 初始化框架类库
       this.initLibs()
       // 判断端口号是否占用
@@ -57,10 +57,10 @@ export class Server {
   initLibs () {
     // 初始化Controller
     Controller.prototype.app = this.app
-    Controller.prototype.config = config.getConfig()
+    Controller.prototype.config = config.get()
     // 初始化Model
-    Model.prototype.config = config.getConfig()
-    Model.prototype.modelConfig = config.getConfig('model')
+    Model.prototype.config = config.get()
+    Model.prototype.modelConfig = config.get('model')
   }
 
   async checkPort () {

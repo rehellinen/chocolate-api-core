@@ -57,7 +57,7 @@ const baseMethod = ({ path = '', method }) => {
 const getController = (str = '') => {
   const [controller, action] = str.split('.')
   const name = firstUpperCase(controller)
-  const path = rRoot(config.getConfig('dir.controller'), `${name}.js`)
+  const path = rRoot(config.get('dir.controller'), `${name}.js`)
   let file
   try {
     file = require(path)

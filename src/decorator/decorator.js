@@ -8,7 +8,7 @@ import { getMapKey, routerMap } from './router'
 import { TokenException } from '../exception'
 
 export const auth = (scope) => {
-  const scopeEnum = config.getConfig('token.scope')
+  const scopeEnum = config.get('token.scope')
   let flag = false
   for (const value of Object.values(scopeEnum)) {
     if (scope === value) {

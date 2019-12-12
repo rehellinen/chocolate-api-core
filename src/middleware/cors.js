@@ -7,7 +7,7 @@ import koaCors from 'koa2-cors'
 import { config } from '../class'
 
 export const cors = app => {
-  const corsConfig = config.getConfig('cors')
+  const corsConfig = config.get('cors')
 
   app.use(koaCors({
     origin: corsConfig.ORIGIN || '*',
