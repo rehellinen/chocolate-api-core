@@ -1,4 +1,4 @@
-const { Validator, rule } = require('../../../src')
+const { Validator, rule } = require('libs')
 
 export class BaseValidator extends Validator {
   @rule('isInt', 'id必须为正整数', { min: 1 })

@@ -36,7 +36,8 @@ export default {
   // TOKEN相关
   TOKEN: {
     SECRET: 'github.com/rehellinen', // 生成token的前缀
-    EXPIRES_IN: 7200, // token过期时间（单位为s）
+    ACCESS_EXPIRES_IN: 7200, // access_token过期时间（单位为s）
+    REFRESH_EXPIRES_IN: 3600 * 24 * 30, // refresh_token过期时间
     // token权限
     SCOPE: {
       USER: Symbol('user'),

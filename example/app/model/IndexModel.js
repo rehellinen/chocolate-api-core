@@ -1,4 +1,4 @@
-const { Model } = require('../../../src')
+const { Model } = require('libs')
 
 export class IndexModel extends Model {
   constructor () {

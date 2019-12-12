@@ -1,4 +1,4 @@
-const { Controller } = require('../../../src')
+const { Controller } = require('libs')
 
 export class Index extends Controller {
   index () {

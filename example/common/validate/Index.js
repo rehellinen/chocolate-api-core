@@ -3,7 +3,7 @@
  *  Create By rehellinen
  *  Create On 2018/10/12 22:38
  */
-import { rule, Validator, type, extend } from '../../../src'
+import { rule, Validator, type, extend } from 'libs'
 import { BaseValidator } from './BaseValidator'
 
 // 模拟异步请求

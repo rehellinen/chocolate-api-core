@@ -7,9 +7,9 @@ const {
   middleware,
   upload,
   config
-} = require('../../../src')
+} = require('libs')
 
-const scope = config.getConfig('token.scope')
+const scope = config.get('token.scope')
 
 @prefix('index')
 class IndexRouter {
