@@ -8,11 +8,14 @@ import glob from 'glob'
 import R from 'ramda'
 import { rRoot } from '../utils'
 import { routerMap } from '../decorator'
+import { config } from '../class'
 
 export const router = app => {
   const router = new Router()
   // 执行路由文件
-  R.map(require)(glob.sync(rRoot('./app/router/**/*.js')))
+  glob
+    .sync(rRoot(`${config.get('dir.router')}/**/*.js`))
+    .forEach(item => require(item))
   // 生成路由
   for (const conf of routerMap.values()) {
     const routerPath = conf.target.prefix + conf.path
