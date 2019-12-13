@@ -11,7 +11,7 @@ class MethodNotAllowed extends Exception {
   }
 }
 
-class NotFound extends Exception {
+class UrlNotFound extends Exception {
   constructor (config) {
     super(config)
     this.setDefault({
@@ -22,4 +22,4 @@ class NotFound extends Exception {
   }
 }
 
-export { MethodNotAllowed, NotFound }
+export { MethodNotAllowed, UrlNotFound }

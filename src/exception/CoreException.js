@@ -33,4 +33,15 @@ class LibsNotFound extends Exception {
   }
 }
 
-export { DatabaseException, ParamsException, LibsNotFound }
+class NotFound extends Exception {
+  constructor (config) {
+    super(config)
+    this.setDefault({
+      httpCode: 404,
+      status: 10001,
+      message: '资源不存在'
+    })
+  }
+}
+
+export { DatabaseException, ParamsException, LibsNotFound, NotFound }

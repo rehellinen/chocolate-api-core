@@ -22,4 +22,15 @@ class InvalidToken extends Exception {
   }
 }
 
-export { ExpiredToken, InvalidToken }
+class NoAuthority extends Exception {
+  constructor (config) {
+    super(config)
+    this.setDefault({
+      httpCode: 401,
+      status: 30002,
+      message: '权限认证失败'
+    })
+  }
+}
+
+export { ExpiredToken, InvalidToken, NoAuthority }
