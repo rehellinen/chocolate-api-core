@@ -4,9 +4,9 @@
  *  Create On 2018/9/25 22:46
  */
 import { DataBase } from './DataBase'
-import { DatabaseException } from '../exception'
 import { camelCase, snakeCase } from '../utils'
 
+// TODO: 软删除、created_at，updated_at功能的完成
 export class Model {
   // 唯一的db实例
   db = DataBase.getInstance()
@@ -47,7 +47,7 @@ export class Model {
 
     const data = await model.fetch({ withRelated: relation })
     if (!data) {
-      throw new DatabaseException()
+      return null
     }
     return data.serialize()
   }
@@ -83,7 +83,7 @@ export class Model {
     const data = await model.fetchAll({ withRelated: relation })
 
     if (data.isEmpty()) {
-      throw new DatabaseException()
+      return null
     }
     return data.serialize()
   }
@@ -109,7 +109,7 @@ export class Model {
     })
 
     if (data.isEmpty()) {
-      throw new DatabaseException()
+      return null
     }
 
     return {
@@ -129,10 +129,7 @@ export class Model {
     const res = await model.save(null, { method: 'insert' })
 
     if (!res) {
-      throw new DatabaseException({
-        message: '写入数据失败',
-        status: 40001
-      })
+      return null
     }
 
     return res
@@ -140,7 +137,6 @@ export class Model {
 
   /**
    * 根据ID修改数据
-   * 软删除，即status设为config.STATUS.DELETED
    * @param {Number} id 主键
    * @param {Object} data 数据对象
    * @returns {Promise<void>}
@@ -165,14 +161,7 @@ export class Model {
     const res = await model.where(condition).save(null, { method: 'update' })
 
     if (!res) {
-      let message = '写入数据失败'
-      if (data.status === this.modelConfig.STATUS.DELETED) {
-        message = '删除数据失败'
-      }
-      throw new DatabaseException({
-        message,
-        status: 40001
-      })
+      return null
     }
 
     return res
@@ -180,7 +169,7 @@ export class Model {
 
   /**
    * 根据ID删除数据
-   * 软删除，即status设为config.STATUS.DELETED
+   * 软删除
    * @param {Number} id 主键
    * @returns {Promise<void>}
    */
@@ -192,7 +181,7 @@ export class Model {
 
   /**
    * 根据特定条件删除数据
-   * 软删除，即status设为config.STATUS.DELETED
+   * 软删除
    * @param {Object} condition 条件对象
    * @returns {Promise<void>}
    */
@@ -266,7 +255,7 @@ export class Model {
    * 处理条件配置
    * @param {Object} model 模型对象
    * @param {Object|Array} condition
-   * condition支持3种方式输入
+   * condition支持2种方式输入
    * 1. { status: 1, id: 6 }
    * 2. {status: ['=', 1], id: ['=', 6]}
    * @private
