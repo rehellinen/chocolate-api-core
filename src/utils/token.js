@@ -1,7 +1,6 @@
 import { Token } from '../class'
 import { TokenType } from './enum'
-import {InvalidToken, NoAuthority, NotFound} from '../exception'
-import {UserModel} from "../model/UserModel"
+import { InvalidToken } from '../exception'
 
 /**
  * 获取access_token和refresh_token
@@ -48,25 +47,4 @@ export const verifyRefreshToken = (token) => {
   if (decoded.type !== TokenType.REFRESH) {
     throw new InvalidToken({ message: '令牌类型错误' })
   }
-}
-
-export const parseHeader = async (ctx, type = TokenType.ACCESS) => {
-  if (!ctx.header || !ctx.header.authorization) {
-    throw new NoAuthority({ message: '没有携带令牌' })
-  }
-  const res = ctx.header.authorization.split(' ')
-  const [prefix, token] = res
-  if (res.length !== 2 || prefix.toLowerCase() !== 'bearer') {
-    throw new NoAuthority()
-  }
-
-  const payload = verifyToken(token)
-  if (payload.type !== type) {
-    throw new NoAuthority({ message: '令牌类型错误' })
-  }
-  const user = await new UserModel().getOneById({ id: payload.id })
-  if (!user) {
-    throw new NotFound({ message: '用户不存在' })
-  }
-  ctx.userInfo = user
 }
