@@ -1,4 +1,4 @@
-import { MethodNotAllowed, NotFound } from '../exception'
+import { MethodNotAllowed, UrlNotFound } from '../exception'
 
 
 export const response = app => {
@@ -6,7 +6,7 @@ export const response = app => {
     await next()
     if (!ctx.body) {
       if (Number.parseInt(ctx.status) === 404) {
-        throw new NotFound()
+        throw new UrlNotFound()
       }
 
       if (Number.parseInt(ctx.status) === 405) {
