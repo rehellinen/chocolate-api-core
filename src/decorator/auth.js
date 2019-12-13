@@ -1,25 +1,27 @@
 import { NoAuthority, NotFound } from '../exception'
 import { middleware } from './decorator'
 import { TokenType, UserStatus, verifyToken } from '../utils'
-import { UserModel } from '../model'
+import { AuthModel, UserModel } from '../model'
 
-const isUserDisable = status => {
+const isUserEnable = status => {
   if (status !== UserStatus.ENABLE) {
     throw new NoAuthority({ message: '账户状态异常' })
   }
+  return true
 }
 
 const isAdmin = status => {
   if (status !== UserStatus.ADMIN) {
     throw new NoAuthority({ message: '该用户不是超级管理员' })
   }
+  return true
 }
 
 // 登录后才能访问
 export const login = () => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx)
-    isUserDisable(ctx.userInfo.status)
+    isUserEnable(ctx.userInfo.status)
     await next()
   })
 }
@@ -28,7 +30,7 @@ export const login = () => {
 export const refresh = () => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx, TokenType.REFRESH)
-    isUserDisable(ctx.userInfo.status)
+    isUserEnable(ctx.userInfo.status)
     await next()
   })
 }
@@ -43,9 +45,36 @@ export const admin = () => {
 }
 
 export const auth = (auth) => {
+  return middleware(async (ctx, next) => {
+    await parseHeader(ctx)
+    if (isAdmin(ctx.userInfo.status)) {
+      await next()
+    } else {
+      isUserEnable(ctx.userInfo.status)
+      const groupId = ctx.userInfo.groupId
+      if (!groupId) {
+        throw new NoAuthority({
+          message: '该用户不属于任何权限组'
+        })
+      }
+
+      const res = new AuthModel().getOne({
+        condition: {
+          groupId,
+          auth
+        }
+      })
+      if (!res) {
+        throw new NoAuthority({
+          message: '权限不足'
+        })
+      }
+      await next()
+    }
+  })
 }
 
-export const parseHeader = async (ctx, type = TokenType.ACCESS) => {
+const parseHeader = async (ctx, type = TokenType.ACCESS) => {
   if (!ctx.header || !ctx.header.authorization) {
     throw new NoAuthority({ message: '没有携带令牌' })
   }
