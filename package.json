@@ -1,5 +1,5 @@
 {
-  "name": "rehellinen-api-core",
+  "name": "chocolate-api",
   "version": "1.0.6",
   "description": "a API framework based on Koa2",
   "main": "dist/index.js",
