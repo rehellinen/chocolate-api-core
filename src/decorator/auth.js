@@ -17,11 +17,11 @@ const isAdmin = status => {
   return true
 }
 
-// 登录后才能访问
-export const login = () => {
+// 只能为有效的access_token
+export const access = () => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx)
-    isUserEnable(ctx.userInfo.status)
+    isUserEnable(ctx.user.status)
     await next()
   })
 }
@@ -30,7 +30,7 @@ export const login = () => {
 export const refresh = () => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx, TokenType.REFRESH)
-    isUserEnable(ctx.userInfo.status)
+    isUserEnable(ctx.user.status)
     await next()
   })
 }
@@ -39,7 +39,7 @@ export const refresh = () => {
 export const admin = () => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx, TokenType.REFRESH)
-    isAdmin(ctx.userInfo.status)
+    isAdmin(ctx.user.status)
     await next()
   })
 }
@@ -47,11 +47,11 @@ export const admin = () => {
 export const auth = (auth) => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx)
-    if (isAdmin(ctx.userInfo.status)) {
+    if (isAdmin(ctx.user.status)) {
       await next()
     } else {
-      isUserEnable(ctx.userInfo.status)
-      const groupId = ctx.userInfo.groupId
+      isUserEnable(ctx.user.status)
+      const groupId = ctx.user.groupId
       if (!groupId) {
         throw new NoAuthority({
           message: '该用户不属于任何权限组'
@@ -74,6 +74,20 @@ export const auth = (auth) => {
   })
 }
 
+// 判断用户是否登录并且操作属于自己的数据
+export const login = (field = 'id') => {
+  return middleware(async (ctx, next) => {
+    await parseHeader(ctx)
+    isUserEnable(ctx.user.status)
+    if (ctx.checkedParams[field] !== ctx.user.id) {
+      throw new NoAuthority({
+        message: '权限不足'
+      })
+    }
+    await next()
+  })
+}
+
 const parseHeader = async (ctx, type = TokenType.ACCESS) => {
   if (!ctx.header || !ctx.header.authorization) {
     throw new NoAuthority({ message: '没有携带令牌' })
@@ -92,5 +106,5 @@ const parseHeader = async (ctx, type = TokenType.ACCESS) => {
   if (!user) {
     throw new NotFound({ message: '用户不存在' })
   }
-  ctx.userInfo = user
+  ctx.user = user
 }
