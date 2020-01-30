@@ -10,12 +10,15 @@ export class Exception extends Error {
   }
 
   setDefault (config = {}) {
-    const fields = ['httpCode', 'status', 'message']
+    const fields = ['httpCode', 'status', 'data']
     fields.forEach(item => {
-      if (Reflect.has(config, item)) {
+      if (Reflect.has(config, item) && !Reflect.has(this, item)) {
         this[item] = config[item]
       }
     })
+    if (!this.message) {
+      this.message = config.message
+    }
   }
 
   getError () {
