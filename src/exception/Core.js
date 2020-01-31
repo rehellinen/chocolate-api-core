@@ -1,25 +1,25 @@
 import { Exception } from './Exception'
 
-class MethodNotAllowed extends Exception {
+class ParamsException extends Exception {
   constructor (config) {
     super(config)
     this.setDefault({
-      httpCode: 405,
-      status: 10002,
-      message: '方法不允许'
+      httpCode: 400,
+      status: 20000,
+      message: '参数错误'
     })
   }
 }
 
-class UrlNotFound extends Exception {
+class NotFound extends Exception {
   constructor (config) {
     super(config)
     this.setDefault({
       httpCode: 404,
       status: 10001,
-      message: '该URL未定义'
+      message: '资源不存在'
     })
   }
 }
 
-export { MethodNotAllowed, UrlNotFound }
+export { ParamsException, NotFound }

@@ -1,3 +1,6 @@
+/**
+ * 自定义异常基类
+ */
 export class Exception extends Error {
   constructor (config = {}) {
     super()
