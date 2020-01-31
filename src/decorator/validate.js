@@ -1,6 +1,6 @@
 import { firstUpperCase, isClass, isFunction, rRoot } from '../utils'
 import { middleware } from './decorator'
-import { InvalidParams, LibsNotFound } from '../exception'
+import { InvalidParams, FilesNotFound } from '../exception'
 import { config } from '../class'
 
 export const validateMap = new Map()
@@ -9,12 +9,12 @@ export const validate = (conf) => {
   let [name, scene] = conf.split('.')
   if (!name) {
     throw new InvalidParams({
-      message: `[Validate]param<name> can't be empty`
+      message: `[Validator]param<name> 不能为空`
     })
   }
   if (!scene) {
     throw new InvalidParams({
-      message: `[Validate]param<scene> can't be empty`
+      message: `[Validator]param<scene> 不能为空`
     })
   }
 
@@ -24,14 +24,14 @@ export const validate = (conf) => {
   try {
     file = require(path)
   } catch (e) {
-    throw new LibsNotFound({
-      message: `[Validator] can't find the file\nFile Path: ${path}`
+    throw new FilesNotFound({
+      message: `[Validator] 找不到文件 Path:${path}`
     })
   }
   const Validator = file[name]
   if (!isClass(Validator)) {
-    throw new LibsNotFound({
-      message: `[Validator] '${name}' is not a constructor\nFile Path: ${path}`
+    throw new FilesNotFound({
+      message: `[Validator] '${name}'不是一个类 Path:${path}`
     })
   }
   return middleware(async (ctx, next) => {

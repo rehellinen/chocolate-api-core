@@ -6,7 +6,7 @@
 import validator from 'validator'
 import { getParams, isFunction, toString } from '../utils'
 import { validateMap } from '../decorator'
-import { LibsNotFound, ParamsException } from '../exception'
+import { NotFound, ParamsException } from '../exception'
 
 
 class ValidatorMethods {
@@ -53,8 +53,9 @@ export class Validator extends ValidatorMethods {
       this._value = toString(this.rawParams[key])
 
       const rules = allRules[key]
+      // TODO：启动服务器之前检查场景中所以字段是否全都定义了规则
       if (!rules || rules.length === 0) {
-        throw new LibsNotFound({
+        throw new NotFound({
           message: `[Validator] ${this.constructor.name}验证器中，${scene}场景中指定的${key}字段没有定义规则`
         })
       }
@@ -120,7 +121,7 @@ export class Validator extends ValidatorMethods {
         this._addError(errInfo)
       }
     } else {
-      throw new LibsNotFound({
+      throw new NotFound({
         message: `未找到验证器方法${funcName}`
       })
     }

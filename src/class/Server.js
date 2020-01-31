@@ -10,7 +10,7 @@ import portfinder from 'portfinder'
 import { rCore, rRoot, warn, error } from '../utils'
 import { Controller } from './Controller'
 import { Model } from './Model'
-import { LibsNotFound } from '../exception'
+import { FilesNotFound } from '../exception'
 import { config } from './Config'
 
 export class Server {
@@ -81,7 +81,7 @@ export class Server {
   }
 
   static processError (e) {
-    if (e instanceof LibsNotFound) {
+    if (e instanceof FilesNotFound) {
       error(e.message)
     } else {
       console.log(e)

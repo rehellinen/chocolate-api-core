@@ -4,7 +4,7 @@
  *  Create On 2018/10/25 23:19
  */
 import { firstUpperCase, isClass, rRoot } from '../utils'
-import { LibsNotFound } from '../exception'
+import { FilesNotFound } from '../exception'
 import { config } from '../class'
 
 // 记录路由信息
@@ -62,20 +62,20 @@ const getController = (str = '') => {
   try {
     file = require(path)
   } catch (e) {
-    throw new LibsNotFound({
-      message: `[Controller] can't find the file\nFile Path: ${path}`
+    throw new FilesNotFound({
+      message: `[Controller] 找不到文件 Path:${path}`
     })
   }
   const Controller = file[name]
   if (!isClass(Controller)) {
-    throw new LibsNotFound({
-      message: `[Controller] '${name}' is not a constructor\nFile Path: ${path}`
+    throw new FilesNotFound({
+      message: `[Controller] '${name}'不是一个类 Path:${path}`
     })
   }
   const instance = new Controller()
   if (!instance[action]) {
-    throw new LibsNotFound({
-      message: `[Controller] '${name}' doesn't have the '${action}' method\nFile Path: ${path}`
+    throw new FilesNotFound({
+      message: `[Controller] '${name}'没有'${action}'方法 Path:${path}`
     })
   }
   return [
