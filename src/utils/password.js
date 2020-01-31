@@ -23,7 +23,7 @@ const generateHash = ({ algorithm, salt, password, iterations = 1 }) => {
  * @param password 密码
  * @param options 参数
  */
-export const generate = (password, options = {}) => {
+export const generatePwd = (password, options = {}) => {
   const algorithm = options.algorithm || 'sha1'
   const saltLength = options.saltLength || 8
   const iterations = options.iterations || 1
@@ -42,7 +42,7 @@ export const generate = (password, options = {}) => {
  * @param password 原始密码
  * @param hashedPassword 密文密码
  */
-export const verify = (password, hashedPassword) => {
+export const verifyPwd = (password, hashedPassword) => {
   if (!password || !hashedPassword) {
     return false
   }
@@ -68,7 +68,7 @@ export const verify = (password, hashedPassword) => {
  * 判断当前密码是否为密文
  * @param password 密码
  */
-export const isHashed = (password) => {
+export const isHashedPwd = (password) => {
   if (!password) {
     return false
   }
