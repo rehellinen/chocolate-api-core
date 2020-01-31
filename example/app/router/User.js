@@ -28,7 +28,7 @@ class UserRouter {
   adminEdit = 'user.adminEdit'
 
   // 管理员添加用户
-  @admin() @validate('user.add') @post()
+  @validate('user.add') @post()
   add = 'user.add'
 
   // 管理员删除用户

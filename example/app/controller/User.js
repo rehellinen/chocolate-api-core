@@ -1,12 +1,18 @@
-const { Controller, UserModel, verify, NoAuthority, getTokens } = require('libs')
+const {
+  Controller,
+  UserModel,
+  NoAuthority,
+  getTokens, verifyPwd, generatePwd
+} = require('libs')
 
 export class User extends Controller {
-  login () {
+  async login () {
     const params = this.ctx.checkedParams
-    const user = UserModel.getUserByAccount(params.account)
-    if (verify(params.password, user.password)) {
+    const user = await new UserModel().getUserByAccount(params.account)
+    if (verifyPwd(params.password, user.password)) {
       const [accessToken, refreshToken] = getTokens(user.id)
       this.json({
+        message: '获取Token成功',
         data: {
           accessToken,
           refreshToken
@@ -25,8 +31,11 @@ export class User extends Controller {
 
   }
 
-  add () {
+  async add () {
     const params = this.ctx.checkedParams
+    params.password = generatePwd(params.password)
+    await new UserModel().save(params)
+    this.json({ message: '添加用户成功' })
   }
 
   delete () {
