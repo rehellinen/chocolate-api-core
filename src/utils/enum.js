@@ -4,7 +4,11 @@ export const TokenType = {
 }
 
 export const UserStatus = {
-  ADMIN: 2,
   ENABLE: 1,
   DISABLED: 0
+}
+
+export const AdminType = {
+  IS: 1,
+  NOT: 0
 }
