@@ -1,4 +1,3 @@
-export * from './Exception'
 export * from './Core'
 export * from './Framework'
 export * from './Http'
