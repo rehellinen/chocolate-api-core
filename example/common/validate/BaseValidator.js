@@ -5,7 +5,10 @@ export class BaseValidator extends Validator {
   @rule('require', 'id不能为空')
   id
 
-  isLegalAccount (key, value, params) {
-    return value.toString().length === 10 && value.startsWith('2019')
-  }
+  @rule('require', '名称不能为空')
+  name
+
+  @rule('require', '序号不能为空')
+  @rule('isInt', '序号必须为非负整数', { min: 0 })
+  order
 }
