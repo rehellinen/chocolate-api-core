@@ -1,6 +1,6 @@
 import { NoAuthority, NotFound } from '../exception'
 import { middleware } from './decorator'
-import { TokenType, UserStatus, verifyToken } from '../utils'
+import { AdminType, TokenType, UserStatus, verifyToken } from '../utils'
 import { AuthModel, UserModel } from '../model'
 
 const isUserEnable = status => {
@@ -11,19 +11,31 @@ const isUserEnable = status => {
 }
 
 const isAdmin = status => {
-  if (status !== UserStatus.ADMIN) {
+  if (status !== AdminType.IS) {
     throw new NoAuthority({ message: '该用户不是超级管理员' })
   }
   return true
 }
 
-// 只能为有效的access_token
-export const access = () => {
-  return middleware(async (ctx, next) => {
-    await parseHeader(ctx)
-    isUserEnable(ctx.user.status)
-    await next()
-  })
+const parseHeader = async (ctx, type = TokenType.ACCESS) => {
+  if (!ctx.header || !ctx.header.authorization) {
+    throw new NoAuthority({ message: '没有携带令牌' })
+  }
+  const res = ctx.header.authorization.split(' ')
+  const [prefix, token] = res
+  if (res.length !== 2 || prefix.toLowerCase() !== 'bearer') {
+    throw new NoAuthority()
+  }
+
+  const payload = verifyToken(token)
+  if (payload.type !== type) {
+    throw new NoAuthority({ message: '令牌类型错误' })
+  }
+  const user = await new UserModel().getOneById({ id: payload.id })
+  if (!user) {
+    throw new NotFound({ message: '用户不存在' })
+  }
+  ctx.user = user
 }
 
 // 只能为有效的refresh_token
@@ -35,15 +47,25 @@ export const refresh = () => {
   })
 }
 
+// 判断用户是否登录
+export const login = () => {
+  return middleware(async (ctx, next) => {
+    await parseHeader(ctx)
+    isUserEnable(ctx.user.status)
+    await next()
+  })
+}
+
 // 管理员才能访问
 export const admin = () => {
   return middleware(async (ctx, next) => {
-    await parseHeader(ctx, TokenType.REFRESH)
+    await parseHeader(ctx)
     isAdmin(ctx.user.status)
     await next()
   })
 }
 
+// 需要特定权限
 export const auth = (auth) => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx)
@@ -72,39 +94,4 @@ export const auth = (auth) => {
       await next()
     }
   })
-}
-
-// 判断用户是否登录并且操作属于自己的数据
-export const login = (field = 'id') => {
-  return middleware(async (ctx, next) => {
-    await parseHeader(ctx)
-    isUserEnable(ctx.user.status)
-    if (ctx.checkedParams[field] !== ctx.user.id) {
-      throw new NoAuthority({
-        message: '权限不足'
-      })
-    }
-    await next()
-  })
-}
-
-const parseHeader = async (ctx, type = TokenType.ACCESS) => {
-  if (!ctx.header || !ctx.header.authorization) {
-    throw new NoAuthority({ message: '没有携带令牌' })
-  }
-  const res = ctx.header.authorization.split(' ')
-  const [prefix, token] = res
-  if (res.length !== 2 || prefix.toLowerCase() !== 'bearer') {
-    throw new NoAuthority()
-  }
-
-  const payload = verifyToken(token)
-  if (payload.type !== type) {
-    throw new NoAuthority({ message: '令牌类型错误' })
-  }
-  const user = await new UserModel().getOneById({ id: payload.id })
-  if (!user) {
-    throw new NotFound({ message: '用户不存在' })
-  }
-  ctx.user = user
 }
