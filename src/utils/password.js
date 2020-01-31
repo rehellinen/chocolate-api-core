@@ -28,7 +28,7 @@ export const generate = (password, options = {}) => {
   const saltLength = options.saltLength || 8
   const iterations = options.iterations || 1
 
-  let salt = generateSalt(saltLength)
+  const salt = generateSalt(saltLength)
   return generateHash({
     salt,
     password,
