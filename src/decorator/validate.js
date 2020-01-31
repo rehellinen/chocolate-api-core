@@ -1,11 +1,23 @@
 import { firstUpperCase, isClass, isFunction, rRoot } from '../utils'
 import { middleware } from './decorator'
-import { LibsNotFound } from '../exception'
+import { InvalidParams, LibsNotFound } from '../exception'
 import { config } from '../class'
 
 export const validateMap = new Map()
 
-export const validate = (name, scene) => {
+export const validate = (conf) => {
+  let [name, scene] = conf.split('.')
+  if (!name) {
+    throw new InvalidParams({
+      message: `[Validate]param<name> can't be empty`
+    })
+  }
+  if (!scene) {
+    throw new InvalidParams({
+      message: `[Validate]param<scene> can't be empty`
+    })
+  }
+
   name = firstUpperCase(name)
   const path = rRoot(config.get('dir.validate'), `${name}.js`)
   let file
