@@ -16,7 +16,7 @@ class ParamsException extends Exception {
     super(config)
     this.setDefault({
       httpCode: 400,
-      status: 10000,
+      status: 20000,
       message: '参数错误'
     })
   }
@@ -44,4 +44,15 @@ class NotFound extends Exception {
   }
 }
 
-export { DatabaseException, ParamsException, LibsNotFound, NotFound }
+class InvalidParams extends Exception {
+  constructor (config) {
+    super(config)
+    this.setDefault({
+      httpCode: 404,
+      status: 10001,
+      message: '资源不存在'
+    })
+  }
+}
+
+export { DatabaseException, ParamsException, LibsNotFound, NotFound, InvalidParams }
