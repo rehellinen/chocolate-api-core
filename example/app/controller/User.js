@@ -1,3 +1,5 @@
+import {NotFound} from '../../../src/exception'
+
 const {
   Controller,
   UserModel,
@@ -35,38 +37,56 @@ export class User extends Controller {
     })
   }
 
-  getAll () {
-
+  async getAll () {
+    const users = await new UserModel().getAll({})
+    this.json({
+      message: '获取所有用户信息成功',
+      data: users
+    })
   }
 
-  async add () {
-    const params = this.ctx.checkedParams
-    params.password = generatePwd(params.password)
-    await new UserModel().saveUser(params)
+  async create () {
+    await new UserModel().createUser(this.ctx.checkedParams)
     this.json({ message: '添加用户成功' })
   }
 
+  // TODO: 软删除
   delete () {
-
   }
 
-  edit () {
-
+  async update () {
+    await new UserModel().updateUser(this.ctx.user, this.ctx.checkedParams)
+    this.json({ message: '更新信息成功' })
   }
 
-  avatar () {
-
+  async avatar () {
+    const params = this.ctx.checkedParams
+    await new UserModel().updateById(params.id, {
+      avatar: params.avatar
+    })
+    this.json({ message: '更新头像成功' })
   }
 
-  password () {
-
+  async password () {
+    await new UserModel().updatePassword(this.ctx.user, this.ctx.checkedParams)
+    this.json({ message: '更新密码成功' })
   }
 
-  adminPassword () {
-
+  async adminPassword () {
+    await new UserModel().updatePasswordAdmin(this.ctx.checkedParams)
+    this.json({ message: '更新密码成功' })
   }
 
-  adminEdit () {
-
+  async adminUpdate () {
+    const userModel = new UserModel()
+    const id = this.ctx.checkedParams.id
+    const user = await userModel.getOneById(id)
+    if (!user) {
+      throw new NotFound({
+        message: '不存在该用户'
+      })
+    }
+    await userModel.updateUser(user, this.ctx.checkedParams)
+    this.json({ message: '更改信息成功' })
   }
 }

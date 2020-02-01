@@ -11,7 +11,7 @@ class UserRouter {
   @validate('user.login') @post('login')
   login = 'user.login'
 
-  // 刷新Access令牌
+  // 更新Access令牌
   @refresh() @post('refresh')
   refresh = 'user.refresh'
 
@@ -19,31 +19,31 @@ class UserRouter {
   @admin() @get('all')
   getAll = 'user.getAll'
 
-  // 管理员修改任一账号密码
-  @admin() @put(':id')
+  // 管理员更新任一账号密码
+  @admin() @validate('user.password') @put(':id')
   adminPassword = 'user.adminPassword'
 
-  // 管理员编辑任一账号信息
-  @login() @put(':id')
-  adminEdit = 'user.adminEdit'
+  // 管理员更新任一账号信息
+  @admin() @validate('user.update') @put(':id')
+  adminUpdate = 'user.adminUpdate'
 
   // 管理员添加用户
-  @validate('user.add') @post()
-  add = 'user.add'
+  @admin() @validate('user.create') @post()
+  create = 'user.create'
 
   // 管理员删除用户
   @admin() @del(':id')
   delete = 'user.delete'
 
   // 用户编辑信息
-  @login() @put()
-  edit = 'user.edit'
+  @login() @validate('user.update') @put()
+  update = 'user.update'
 
   // 用户修改头像
-  @login() @put()
+  @login() @validate('user.avatar') @put()
   avatar = 'user.avatar'
 
   // 用户修改密码
-  @login() @put()
+  @login() @validate('user.password') @put()
   password = 'user.password'
 }

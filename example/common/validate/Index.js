@@ -16,7 +16,7 @@ const http = () => new Promise(resolve => {
 @extend(BaseValidator)
 class Index extends Validator {
   scene = {
-    add: ['id', 'account', 'name']
+    create: ['id', 'account', 'name']
   }
 
   @rule('matches', '名称格式不合法', /test$/)

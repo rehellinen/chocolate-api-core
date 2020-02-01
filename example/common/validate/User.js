@@ -10,8 +10,10 @@ import { BaseValidator } from './BaseValidator'
 class User extends Validator {
   scene = {
     login: ['account', 'password'],
-    add: ['account', 'name', 'password', 'avatar', 'groupId', 'status', 'admin'],
-    edit: ['id', 'account', 'name', 'password', 'avatar', 'groupId', 'status', 'admin']
+    create: ['account', 'name', 'password', 'avatar', 'groupId', 'status', 'admin'],
+    update: ['id', 'account', 'name', 'password', 'avatar', 'groupId', 'status', 'admin'],
+    password: ['password'],
+    avatar: ['avatar']
   }
 
   @rule('require', '登录账户不能为空')
