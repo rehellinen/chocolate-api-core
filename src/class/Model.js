@@ -123,7 +123,7 @@ export class Model {
    * @param {Object} data 数据对象
    * @return {Promise<void>}
    */
-  async save (data) {
+  async create (data) {
     const model = this.model.forge(data)
 
     const res = await model.save(null, { method: 'insert' })
@@ -141,8 +141,8 @@ export class Model {
    * @param {Object} data 数据对象
    * @returns {Promise<void>}
    */
-  async editById (id, data) {
-    return this.edit({
+  async updateById (id, data) {
+    return this.update({
       condition: { id },
       data
     })
@@ -154,7 +154,7 @@ export class Model {
    * @param {Object} data 数据对象
    * @return {Promise<void>}
    */
-  async edit ({ condition = {}, data }) {
+  async update ({ condition = {}, data }) {
     const model = this.model.forge(data)
 
     this._processCondition(model, condition)
@@ -186,7 +186,7 @@ export class Model {
    * @returns {Promise<void>}
    */
   async delete ({ condition = {} }) {
-    return this.edit({
+    return this.update({
       condition,
       data: { status: this.modelConfig.STATUS.DELETED }
     })
