@@ -10,8 +10,8 @@ const isUserEnable = status => {
   return true
 }
 
-const isAdmin = status => {
-  if (status !== AdminType.IS) {
+const isAdmin = admin => {
+  if (admin !== AdminType.IS) {
     throw new NoAuthority({ message: '该用户不是超级管理员' })
   }
   return true
@@ -60,7 +60,7 @@ export const login = () => {
 export const admin = () => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx)
-    isAdmin(ctx.user.status)
+    isAdmin(ctx.user.admin)
     await next()
   })
 }
@@ -69,7 +69,7 @@ export const admin = () => {
 export const auth = (auth) => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx)
-    if (isAdmin(ctx.user.status)) {
+    if (isAdmin(ctx.user.admin)) {
       await next()
     } else {
       isUserEnable(ctx.user.status)
