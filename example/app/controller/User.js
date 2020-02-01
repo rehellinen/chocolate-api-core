@@ -23,7 +23,8 @@ export class User extends Controller {
     }
   }
 
-  refresh () {
+  async refresh () {
+    const user = this.ctx.user
     const [accessToken, refreshToken] = getTokens(user.id)
     this.json({
       message: '刷新Token成功',
