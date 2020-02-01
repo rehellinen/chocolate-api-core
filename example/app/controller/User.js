@@ -1,13 +1,13 @@
-import {NotFound} from '../../../src/exception'
+import { BaseController } from './BaseController'
 
 const {
-  Controller,
   UserModel,
   NoAuthority,
-  getTokens, verifyPwd, generatePwd
+  getTokens, verifyPwd,
+  NotFound
 } = require('libs')
 
-export class User extends Controller {
+export class User extends BaseController {
   async login () {
     const params = this.ctx.checkedParams
     const user = await new UserModel().getUserByAccount(params.account)
