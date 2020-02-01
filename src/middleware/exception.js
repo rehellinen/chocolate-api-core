@@ -1,11 +1,10 @@
 import { types } from '../utils'
-import { Exception } from '../exception'
-import { config } from '../class'
+import { config, Exception } from '../class'
 
 export const exception = (app) => {
   const processError = (e, ctx) => {
     if (e instanceof Exception) {
-      ctx.status = e.httpCode
+      ctx.status = parseInt(e.httpCode)
       ctx.type = types.json
       ctx.body = e.getError()
       ctx.body.request = `${ctx.method} ${ctx.url}`
