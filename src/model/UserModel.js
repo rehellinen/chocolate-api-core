@@ -9,6 +9,24 @@ export class UserModel extends Model {
     })
   }
 
+  async getOneUser (id) {
+    const user = await this.getOneById(id)
+    if (!user) {
+      throw new NotFound({ message: '该用户不存在' })
+    }
+    return user
+  }
+
+  async getAllUsers () {
+    const users = await new UserModel().getAll({})
+    if (!users) {
+      throw new NotFound({
+        message: '用户不存在'
+      })
+    }
+    return users
+  }
+
   async getUserByAccount (account) {
     const user = await this.getOne({
       condition: { account }
@@ -37,6 +55,17 @@ export class UserModel extends Model {
       await this.getUserByAccount(data.account)
     }
     await this.updateById(user.id, data)
+  }
+
+  async updateUserAdmin (data) {
+    const user = await this.getOneById(data.id)
+    if (!user) {
+      throw new NotFound({
+        message: '不存在该用户'
+      })
+    }
+    await this.updateUser(user, data)
+    this.json({ message: '更改信息成功' })
   }
 
   async updatePassword (user, data) {

@@ -37,7 +37,7 @@ export class User extends Controller {
   }
 
   async get () {
-    const users = await new UserModel().getAll({})
+    const users = await new UserModel().getOneUser(this.ctx.checkedParams.id)
     this.json({
       message: '获取用户信息成功',
       data: users
@@ -45,12 +45,7 @@ export class User extends Controller {
   }
 
   async getAll () {
-    const users = await new UserModel().getAll({})
-    if (!users) {
-      throw new NotFound({
-        message: '用户不存在'
-      })
-    }
+    const users = await new UserModel().getAllUsers()
     this.json({
       message: '获取所有用户信息成功',
       data: users
@@ -71,6 +66,11 @@ export class User extends Controller {
     this.json({ message: '更新信息成功' })
   }
 
+  async adminUpdate () {
+    await new UserModel().updateUserAdmin(this.ctx.checkedParams)
+    this.json({ message: '更改信息成功' })
+  }
+
   async avatar () {
     const params = this.ctx.checkedParams
     await new UserModel().updateById(params.id, {
@@ -87,18 +87,5 @@ export class User extends Controller {
   async adminPassword () {
     await new UserModel().updatePasswordAdmin(this.ctx.checkedParams)
     this.json({ message: '更新密码成功' })
-  }
-
-  async adminUpdate () {
-    const userModel = new UserModel()
-    const id = this.ctx.checkedParams.id
-    const user = await userModel.getOneById(id)
-    if (!user) {
-      throw new NotFound({
-        message: '不存在该用户'
-      })
-    }
-    await userModel.updateUser(user, this.ctx.checkedParams)
-    this.json({ message: '更改信息成功' })
   }
 }
