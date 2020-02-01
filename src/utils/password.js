@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 
-const generateSalt = (length) => {
+export const generateSalt = (length) => {
   return crypto
     .randomBytes(Math.ceil(length / 2))
     .toString('hex')
