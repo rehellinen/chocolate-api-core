@@ -4,6 +4,7 @@
  *  Create On 2018/9/25 22:46
  */
 import { DataBase } from './DataBase'
+import { config } from './Config'
 import { camelCase, snakeCase } from '../utils'
 
 // TODO: 软删除、created_at，updated_at功能的完成
@@ -103,7 +104,7 @@ export class Model {
     this._processOrder(model, order)
 
     const data = await model.fetchPage({
-      pageSize: pageConf.pageSize || this.modelConfig.PAGE_SIZE,
+      pageSize: pageConf.pageSize || config.get('model.page_size'),
       page: pageConf.page || 1,
       withRelated: relation
     })
@@ -188,7 +189,7 @@ export class Model {
   async delete ({ condition = {} }) {
     return this.update({
       condition,
-      data: { status: this.modelConfig.STATUS.DELETED }
+      data: { status: -1 }
     })
   }
 
@@ -226,7 +227,7 @@ export class Model {
    * @private
    */
   _generateModel (modelConf) {
-    const baseConf = this.modelConfig.CONVERT_FIELDS ? {
+    const baseConf = config.get('model.convert_fields') ? {
       parse (response) {
         for (const [key, value] of Object.entries(response)) {
           const newKey = camelCase(key)
