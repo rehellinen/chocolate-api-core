@@ -22,4 +22,15 @@ class NotFound extends Exception {
   }
 }
 
-export { ParamsException, NotFound }
+class RepeatException extends Exception {
+  constructor (config) {
+    super(config)
+    this.setDefault({
+      httpCode: 400,
+      status: 30200,
+      message: '数据重复'
+    })
+  }
+}
+
+export { ParamsException, NotFound, RepeatException }
