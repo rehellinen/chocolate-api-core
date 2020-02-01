@@ -1,6 +1,6 @@
-import { BaseController } from './BaseController'
+const { Controller } = require('libs')
 
-export class Files extends BaseController {
+export class Files extends Controller {
   image () {
     this.json({ message: '上传图片成功' })
   }

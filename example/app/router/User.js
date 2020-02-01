@@ -35,6 +35,10 @@ class UserRouter {
   @admin() @del(':id')
   delete = 'user.delete'
 
+  // 用户获取信息
+  @login @get()
+  get = 'user.get'
+
   // 用户编辑信息
   @login() @validate('user.update') @put()
   update = 'user.update'

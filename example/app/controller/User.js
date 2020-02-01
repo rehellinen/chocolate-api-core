@@ -1,13 +1,12 @@
-import { BaseController } from './BaseController'
-
 const {
+  Controller,
   UserModel,
   NoAuthority,
   getTokens, verifyPwd,
   NotFound
 } = require('libs')
 
-export class User extends BaseController {
+export class User extends Controller {
   async login () {
     const params = this.ctx.checkedParams
     const user = await new UserModel().getUserByAccount(params.account)
@@ -37,8 +36,21 @@ export class User extends BaseController {
     })
   }
 
+  async get () {
+    const users = await new UserModel().getAll({})
+    this.json({
+      message: '获取用户信息成功',
+      data: users
+    })
+  }
+
   async getAll () {
     const users = await new UserModel().getAll({})
+    if (!users) {
+      throw new NotFound({
+        message: '用户不存在'
+      })
+    }
     this.json({
       message: '获取所有用户信息成功',
       data: users
