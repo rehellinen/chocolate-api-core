@@ -34,7 +34,7 @@ export class User extends Controller {
   async add () {
     const params = this.ctx.checkedParams
     params.password = generatePwd(params.password)
-    await new UserModel().save(params)
+    await new UserModel().saveUser(params)
     this.json({ message: '添加用户成功' })
   }
 
