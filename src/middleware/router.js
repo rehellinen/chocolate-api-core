@@ -15,12 +15,10 @@ export default app => {
   require(routerPath)
 
   // 生成路由
-  for (const ctorConf of routerMap.values()) {
-    Object.values(ctorConf).forEach(routerConf => {
-      const { method, url, action } = routerConf
+  for (const routerConf of routerMap.values()) {
+    const { method, url, action } = routerConf
 
-      router[method](url, action)
-    })
+    router[method](url, action)
   }
 
   // router.use((ctx) => {

@@ -1,27 +1,28 @@
 import { config } from '../class'
 import { firstUpperCase, isPlainObject, rRoot } from '../utils'
-
-export const routerMap = new Map()
+import { normalizePath, routerMap } from './utils'
 
 const baseMethod = (url, exp, method) => {
   // 支持传入对象
   if (isPlainObject(url)) {
+    const res = []
     Object.keys(url).forEach(key => {
-      baseMethod(key, url[key], method)
+      res.push(baseMethod(key, url[key], method))
     })
-    return
+    return res
   }
 
   const pathArr = exp.split('.')
-  const action = pathArr.pop()
+  const actionName = pathArr.pop()
   const fileName = firstUpperCase(pathArr.pop())
   const ctorPath = rRoot(config.get('dir.module').app, 'controller', pathArr.join('/'), fileName)
   const Ctor = require(ctorPath).default
 
-  let ctorConf = routerMap.get(Ctor)
-  if (!ctorConf) {
-    ctorConf = { [action]: {} }
-    routerMap.set(Ctor, ctorConf)
+  const key = fileName + '.' + actionName
+  let routerConf = routerMap.get(key)
+  if (!routerConf) {
+    routerConf = {}
+    routerMap.set(key, routerConf)
   }
 
   const extraConf = {
@@ -30,55 +31,29 @@ const baseMethod = (url, exp, method) => {
     action: async (ctx, next) => {
       const instance = new Ctor()
       instance.setConfig(ctx, next)
-      await instance[action]()
+      await instance[actionName]()
       await next()
     }
   }
-  const routerConf = ctorConf[action]
-  routerConf
-    ? Object.assign(routerConf, extraConf)
-    : ctorConf[action] = extraConf
+  Object.assign(routerConf, extraConf)
+  return key
 }
 
-export const get = (url, exp) => {
-  baseMethod(url, exp, 'get')
-}
+export const get = (url, exp) => baseMethod(url, exp, 'get')
 
-export const post = (url, exp) => {
-  baseMethod(url, exp, 'post')
-}
+export const post = (url, exp) => baseMethod(url, exp, 'post')
 
-export const put = (url, exp) => {
-  baseMethod(url, exp, 'put')
-}
+export const put = (url, exp) => baseMethod(url, exp, 'put')
 
-export const del = (url, exp) => {
-  baseMethod(url, exp, 'del')
-}
+export const del = (url, exp) => baseMethod(url, exp, 'del')
 
-export const patch = (url, exp) => {
-  baseMethod(url, exp, 'patch')
-}
+export const patch = (url, exp) => baseMethod(url, exp, 'patch')
 
-export const head = (url, exp) => {
-  baseMethod(url, exp, 'head')
-}
+export const head = (url, exp) => baseMethod(url, exp, 'head')
 
-export const all = (url, exp) => {
-  baseMethod(url, exp, 'get')
-}
+export const all = (url, exp) => baseMethod(url, exp, 'get')
 
-// TODO: options / redirect
-export const options = (url, exp) => {
-  baseMethod(url, exp, 'options')
-}
+// TODO: options / redirect / head / patch
+export const options = (url, exp) => baseMethod(url, exp, 'options')
 
-export const redirect = (url, exp) => {
-  baseMethod(url, exp, 'get')
-}
-
-function normalizePath (path = '') {
-  path = path.startsWith('/') ? path : `/${path}`
-  path = path.endsWith('/') ? path.substr(0, path.length - 1) : path
-  return path
-}
+export const redirect = (url, exp) => baseMethod(url, exp, 'get')
