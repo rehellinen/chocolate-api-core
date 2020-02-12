@@ -12,15 +12,13 @@ const baseMethod = (url, exp, method) => {
 
   let ctorConf = routerMap.get(Ctor)
   if (!ctorConf) {
-    const conf = {
+    const conf = ctorConf = {
       [action]: {}
     }
     routerMap.set(Ctor, conf)
-    ctorConf = conf
   }
 
-  const routerConf = ctorConf[action]
-  Object.assign(routerConf, {
+  const extraConf = {
     method,
     url: normalizePath(url),
     action: async (ctx, next) => {
@@ -29,7 +27,11 @@ const baseMethod = (url, exp, method) => {
       await instance[action]()
       await next()
     }
-  })
+  }
+  const routerConf = ctorConf[action]
+  routerConf
+    ? Object.assign(routerConf, extraConf)
+    : ctorConf[action] = extraConf
 }
 
 export const get = (url, exp) => {
