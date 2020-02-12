@@ -1,7 +1,7 @@
 import { MethodNotAllowed, UrlNotFound } from '../exception'
 
 
-export const response = app => {
+export default app => {
   app.use(async (ctx, next) => {
     await next()
     if (!ctx.body) {

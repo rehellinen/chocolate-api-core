@@ -1,7 +1,7 @@
 import { types } from '../utils'
 import { config, Exception } from '../class'
 
-export const exception = (app) => {
+export default (app) => {
   const processError = (e, ctx) => {
     if (e instanceof Exception) {
       ctx.status = parseInt(e.httpCode)
