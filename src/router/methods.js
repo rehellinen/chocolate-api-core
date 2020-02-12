@@ -1,9 +1,17 @@
 import { config } from '../class'
-import { firstUpperCase, rRoot } from '../utils'
+import { firstUpperCase, isPlainObject, rRoot } from '../utils'
 
 export const routerMap = new Map()
 
 const baseMethod = (url, exp, method) => {
+  // 支持传入对象
+  if (isPlainObject(url)) {
+    Object.keys(url).forEach(key => {
+      baseMethod(key, url[key], method)
+    })
+    return
+  }
+
   const pathArr = exp.split('.')
   const action = pathArr.pop()
   const fileName = firstUpperCase(pathArr.pop())
@@ -12,10 +20,8 @@ const baseMethod = (url, exp, method) => {
 
   let ctorConf = routerMap.get(Ctor)
   if (!ctorConf) {
-    const conf = ctorConf = {
-      [action]: {}
-    }
-    routerMap.set(Ctor, conf)
+    ctorConf = { [action]: {} }
+    routerMap.set(Ctor, ctorConf)
   }
 
   const extraConf = {
