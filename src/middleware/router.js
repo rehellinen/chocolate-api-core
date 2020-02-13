@@ -4,10 +4,9 @@
  *  Create On 2018/10/25 20:37
  */
 import Router from 'koa-router'
-import { rRoot } from '../utils'
+import { rRoot, warn } from '../utils'
 import { routerMap } from '../router'
 import { config } from '../class'
-import { InvalidParams } from '../exception'
 
 export default app => {
   const router = new Router()
@@ -21,9 +20,8 @@ export default app => {
 
     if (!method || !url) {
       const [fileName, actionName] = key.split('.')
-      throw new InvalidParams({
-        message: `${fileName}.js中的${actionName}方法没有定义相应的路由`
-      })
+      warn(`${fileName}.js中的${actionName}方法没有定义相应的路由`)
+      return
     }
     router[method](url, ...action)
   }
