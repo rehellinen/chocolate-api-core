@@ -1,5 +1,5 @@
 import { config } from '../class'
-import { firstUpperCase, isPlainObject, rRoot } from '../utils'
+import { warn, firstUpperCase, isPlainObject, rRoot } from '../utils'
 import { normalizePath, routerMap } from './utils'
 
 const baseMethod = (url, exp, method) => {
@@ -18,6 +18,11 @@ const baseMethod = (url, exp, method) => {
   const ctorPath = rRoot(config.get('dir.module').app, 'controller', pathArr.join('/'), fileName)
   const Ctor = require(ctorPath).default
 
+  if (!Ctor.prototype[actionName]) {
+    warn(`${fileName}.js中的${actionName}方法不存在`)
+    return
+  }
+
   const key = fileName + '.' + actionName
   let routerConf = routerMap.get(key)
   if (!routerConf) {
@@ -25,16 +30,20 @@ const baseMethod = (url, exp, method) => {
     routerMap.set(key, routerConf)
   }
 
+  const action = async (ctx, next) => {
+    const instance = new Ctor()
+    instance.setConfig(ctx, next)
+    await instance[actionName]()
+    await next()
+  }
+
   const extraConf = {
     method,
-    url: normalizePath(url),
-    action: async (ctx, next) => {
-      const instance = new Ctor()
-      instance.setConfig(ctx, next)
-      await instance[actionName]()
-      await next()
-    }
+    url: normalizePath(url)
   }
+  routerConf.action
+    ? routerConf.action.unshift(action)
+    : routerConf.action = [action]
   Object.assign(routerConf, extraConf)
   return key
 }
