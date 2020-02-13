@@ -9,6 +9,7 @@ import { promisify } from 'util'
 import { resolve, parse } from 'path'
 import getRawBody from 'raw-body'
 import chalk from 'chalk'
+import { GeneralError } from '../exception'
 
 /**
  * 从项目根目录开始寻找
@@ -168,7 +169,9 @@ export const warn = (msg) => {
 }
 
 export const error = (msg) => {
-  console.log(chalk.red(`Error: ${msg}`))
+  throw new GeneralError({
+    message: msg
+  })
 }
 
 export const snakeCase = (string) => [...string]
@@ -203,4 +206,11 @@ export const toString = (value) => {
   if (value == null) return ''
   if (typeof value === 'string') return value
   return `${value}`
+}
+
+const _toString = Object.prototype.toString
+
+// 判断是否为一个普通对象
+export function isPlainObject (obj) {
+  return _toString.call(obj) === '[object Object]'
 }
