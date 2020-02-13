@@ -2,13 +2,14 @@ import { config } from '../class'
 import { warn, firstUpperCase, isPlainObject, rRoot } from '../utils'
 import { normalizePath, routerMap } from './utils'
 
+// TODO:处理自定义路由与rest路由冲突的情况
 const baseMethod = (url, exp, method) => {
   // 支持传入对象
-  if (isPlainObject(url)) {
+  if (Array.isArray(url)) {
     const res = []
-    Object.keys(url).forEach(key => {
-      res.push(baseMethod(key, url[key], method))
-    })
+    for (const key of url) {
+      res.push(baseMethod(key[0], key[1], method))
+    }
     return res
   }
 
