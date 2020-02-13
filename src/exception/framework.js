@@ -1,4 +1,4 @@
-import { Exception } from '../class'
+import { Exception } from './Exception'
 
 class FilesNotFound extends Exception {
   constructor (config) {
@@ -20,4 +20,14 @@ class InvalidParams extends Exception {
   }
 }
 
-export { FilesNotFound, InvalidParams }
+class GeneralError extends Exception {
+  constructor (config) {
+    super(config)
+    this.setDefault({
+      status: 10002,
+      message: '框架内部错误'
+    })
+  }
+}
+
+export { FilesNotFound, InvalidParams, GeneralError }

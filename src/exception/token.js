@@ -1,4 +1,4 @@
-import { Exception } from '../class'
+import { Exception } from './Exception'
 
 class ExpiredToken extends Exception {
   constructor (config) {

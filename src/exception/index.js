@@ -1,3 +1,4 @@
+export * from './Exception'
 export * from './core'
 export * from './framework'
 export * from './http'

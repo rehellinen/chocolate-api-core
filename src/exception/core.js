@@ -1,4 +1,4 @@
-import { Exception } from '../class'
+import { Exception } from './Exception'
 
 class ParamsException extends Exception {
   constructor (config) {
