@@ -7,6 +7,7 @@ import Router from 'koa-router'
 import { rRoot } from '../utils'
 import { routerMap } from '../router'
 import { config } from '../class'
+import { InvalidParams } from '../exception'
 
 export default app => {
   const router = new Router()
@@ -15,15 +16,17 @@ export default app => {
   require(routerPath)
 
   // 生成路由
-  for (const routerConf of routerMap.values()) {
+  for (const [key, routerConf] of routerMap.entries()) {
     const { method, url, action } = routerConf
 
-    router[method](url, action)
+    if (!method || !url) {
+      const [fileName, actionName] = key.split('.')
+      throw new InvalidParams({
+        message: `${fileName}.js中的${actionName}方法没有定义相应的路由`
+      })
+    }
+    router[method](url, ...action)
   }
-
-  // router.use((ctx) => {
-  //   console.log(123)
-  // })
 
   app.use(router.routes())
   app.use(router.allowedMethods())
