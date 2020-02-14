@@ -17,4 +17,10 @@ prefix('user', [
   rest('user') // rest路由
 ])
 
+prefix('files', [
+  post({
+    image: 'files.image'
+  })
+])
+
 
