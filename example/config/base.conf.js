@@ -25,8 +25,8 @@ export default {
     ALLOW_HEADERS: ['Content-Type', 'Authorization', 'Accept', 'token', 'Content-Length', 'X-Requested-With']
   },
   UPLOAD: {
-    UPLOAD_DIR: 'upload', // 上传文件的根目录，upload表示/upload/
-    UPLOAD_NAME: 'file' // 表单中表示上传文件的key
+    DIR: 'upload', // 上传文件的根目录，upload表示/upload/
+    NAME: 'file' // 表单中表示上传文件的key
   },
   TOKEN: {
     SECRET: 'github.com/rehellinen', // 生成token的前缀
