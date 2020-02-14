@@ -11,8 +11,10 @@ class User extends Validator {
   scene = {
     login: ['account', 'password'],
     create: ['account', 'name', 'password', 'avatar', 'groupId', 'status', 'admin'],
-    update: ['id', 'account', 'name', 'password', 'avatar', 'groupId', 'status', 'admin'],
-    password: ['password'],
+    update: ['id', 'account', 'name', 'avatar', 'groupId', 'status', 'admin'],
+    userUpdate: ['account', 'name', 'avatar', 'groupId', 'status', 'admin'],
+    password: ['id', 'password'],
+    userPassword: ['password'],
     avatar: ['avatar']
   }
 

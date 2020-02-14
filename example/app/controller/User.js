@@ -3,10 +3,11 @@ const {
   UserModel,
   NoAuthority,
   getTokens, verifyPwd,
-  NotFound
+  login, admin, refresh, validate
 } = require('libs')
 
-export class User extends Controller {
+class User extends Controller {
+  @validate('user.login')
   async login () {
     const params = this.ctx.checkedParams
     const user = await new UserModel().getUserByAccount(params.account)
@@ -24,6 +25,7 @@ export class User extends Controller {
     }
   }
 
+  @refresh()
   async refresh () {
     const user = this.ctx.user
     const [accessToken, refreshToken] = getTokens(user.id)
@@ -36,14 +38,7 @@ export class User extends Controller {
     })
   }
 
-  async get () {
-    const users = await new UserModel().getOneUser(this.ctx.checkedParams.id)
-    this.json({
-      message: '获取用户信息成功',
-      data: users
-    })
-  }
-
+  @admin()
   async getAll () {
     const users = await new UserModel().getAllUsers()
     this.json({
@@ -52,40 +47,63 @@ export class User extends Controller {
     })
   }
 
+  @admin()
+  @validate('user.create')
   async create () {
     await new UserModel().createUser(this.ctx.checkedParams)
     this.json({ message: '添加用户成功' })
   }
 
-  // TODO: 软删除
-  delete () {
-  }
-
+  @admin()
+  @validate('user.update')
   async update () {
-    await new UserModel().updateUser(this.ctx.user, this.ctx.checkedParams)
+    await new UserModel().updateUser(this.ctx.checkedParams)
     this.json({ message: '更新信息成功' })
   }
 
-  async adminUpdate () {
-    await new UserModel().updateUserAdmin(this.ctx.checkedParams)
-    this.json({ message: '更改信息成功' })
+  @admin()
+  async delete () {
   }
 
-  async avatar () {
-    const params = this.ctx.checkedParams
-    await new UserModel().updateById(params.id, {
-      avatar: params.avatar
+  @admin()
+  @validate('user.password')
+  async password () {
+    await new UserModel().updatePassword(this.ctx.checkedParams)
+    this.json({ message: '更新用户密码成功' })
+  }
+
+  // 以下是用户操作的api
+  @login()
+  async userGet () {
+    this.json({
+      message: '获取信息成功',
+      data: this.ctx.user
     })
+  }
+
+  @login()
+  @validate('user.userPassword')
+  async userPassword () {
+    this.ctx.checkedParams.id = this.ctx.user.id
+    await new UserModel().updatePassword(this.ctx.checkedParams)
+    this.json({ message: '更改密码成功' })
+  }
+
+  @login()
+  @validate('user.userUpdate')
+  async userUpdate () {
+    this.ctx.checkedParams.id = this.ctx.user.id
+    await new UserModel().updateUser(this.ctx.checkedParams)
+    this.json({ message: '更新信息成功' })
+  }
+
+  @login()
+  @validate('user.avatar')
+  async avatar () {
+    this.ctx.checkedParams.id = this.ctx.user.id
+    await new UserModel().updateUser(this.ctx.checkedParams)
     this.json({ message: '更新头像成功' })
   }
-
-  async password () {
-    await new UserModel().updatePassword(this.ctx.user, this.ctx.checkedParams)
-    this.json({ message: '更新密码成功' })
-  }
-
-  async adminPassword () {
-    await new UserModel().updatePasswordAdmin(this.ctx.checkedParams)
-    this.json({ message: '更新密码成功' })
-  }
 }
+
+export default User
