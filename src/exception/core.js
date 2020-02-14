@@ -33,4 +33,15 @@ class RepeatException extends Exception {
   }
 }
 
-export { ParamsException, NotFound, RepeatException }
+class UploadException extends Exception {
+  constructor (config) {
+    super(config)
+    this.setDefault({
+      httpCode: 400,
+      status: 30300,
+      message: '上传文件失败'
+    })
+  }
+}
+
+export { ParamsException, NotFound, RepeatException, UploadException }
