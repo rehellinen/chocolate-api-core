@@ -1,5 +1,6 @@
 import { types } from '../utils'
-import { config, Exception } from '../class'
+import { config } from '../class'
+import { Exception } from '../exception'
 
 export default (app) => {
   const processError = (e, ctx) => {
