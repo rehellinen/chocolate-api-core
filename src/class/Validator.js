@@ -100,6 +100,10 @@ export class Validator extends ValidatorMethods {
     } else if (funcNames.includes('isBoolean') || rules._type === 'boolean') {
       value = validator.toBoolean(value)
     }
+
+    if (typeof value === 'string') {
+      value = decodeURIComponent(value)
+    }
     this.checkedParams[this._key] = value
   }
 
