@@ -73,15 +73,23 @@ export class Model {
    * @param {Object} condition Array 查询条件
    * @param {Array} relation String 关联的模型名称
    * @param {Array} order Array 设置排序的字段
+   * @param limit 限制一次获取的数据的数量
    * @return {Promise<*>}
    */
-  async getAll ({ condition = {}, relation = [], order = ['id'] }) {
+  async getAll ({
+    condition = {},
+    relation = [],
+    order = ['id'],
+    limit = config.get('model.get_size')
+  }) {
     const model = this.model.forge()
 
     this._processCondition(model, condition)
     this._processOrder(model, order)
 
-    const data = await model.fetchAll({ withRelated: relation })
+    const data = await model.query(function (db) {
+      db.limit(limit)
+    }).fetchAll({ withRelated: relation })
 
     if (data.isEmpty()) {
       return null
