@@ -7,11 +7,11 @@ import Koa from 'koa'
 import R from 'ramda'
 import chalk from 'chalk'
 import portfinder from 'portfinder'
-import { rCore, rRoot, warn, error } from '../utils'
+import { rCore, rRoot, warn } from '../utils'
 import { Controller } from './Controller'
 import { Model } from './Model'
-import { FilesNotFound } from '../exception'
 import { config } from './Config'
+import { Exception } from '../exception'
 
 export class Server {
   // Koa2实例
@@ -81,10 +81,11 @@ export class Server {
   }
 
   static processError (e) {
-    if (e instanceof FilesNotFound) {
-      error(e.message)
+    if (e instanceof Exception) {
+      console.log(chalk.red(`Error: ${e.message}`))
     } else {
       console.log(e)
+      console.log(chalk.red(`Error: ${e.message}`))
     }
   }
 }
