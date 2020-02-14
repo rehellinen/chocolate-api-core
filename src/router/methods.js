@@ -1,14 +1,13 @@
 import { config } from '../class'
 import { warn, firstUpperCase, isPlainObject, rRoot } from '../utils'
-import { normalizePath, routerMap } from './utils'
+import { normalizePath, orderedRouterMap, routerMap } from './utils'
 
-// TODO:处理自定义路由与rest路由冲突的情况
 const baseMethod = (url, exp, method) => {
   // 支持传入对象
-  if (Array.isArray(url)) {
+  if (isPlainObject(url)) {
     const res = []
-    for (const key of url) {
-      res.push(baseMethod(key[0], key[1], method))
+    for (const [key, val] of Object.entries(url)) {
+      res.push(baseMethod(key, val, method))
     }
     return res
   }
@@ -28,7 +27,6 @@ const baseMethod = (url, exp, method) => {
   let routerConf = routerMap.get(key)
   if (!routerConf) {
     routerConf = {}
-    routerMap.set(key, routerConf)
   }
 
   const action = async (ctx, next) => {
@@ -38,14 +36,13 @@ const baseMethod = (url, exp, method) => {
     await next()
   }
 
-  const extraConf = {
-    method,
-    url: normalizePath(url)
-  }
+  routerConf.method = method
+  routerConf.url = normalizePath(url)
   routerConf.action
-    ? routerConf.action.unshift(action)
+    ? routerConf.action.push(action)
     : routerConf.action = [action]
-  Object.assign(routerConf, extraConf)
+
+  orderedRouterMap.set(key, routerConf)
   return key
 }
 

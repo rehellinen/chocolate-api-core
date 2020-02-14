@@ -4,6 +4,11 @@
  */
 export const routerMap = new Map()
 
+/**
+ * 安装路由的编写顺序进行排序
+ */
+export const orderedRouterMap = new Map()
+
 // 保证url以'/'开头，并且不以'/'结尾
 export const normalizePath = (path = '') => {
   path = path.startsWith('/') ? path : `/${path}`

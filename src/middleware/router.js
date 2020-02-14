@@ -4,8 +4,8 @@
  *  Create On 2018/10/25 20:37
  */
 import Router from 'koa-router'
-import { rRoot, warn } from '../utils'
-import { routerMap } from '../router'
+import { rRoot } from '../utils'
+import { orderedRouterMap } from '../router'
 import { config } from '../class'
 
 export default app => {
@@ -15,14 +15,8 @@ export default app => {
   require(routerPath)
 
   // 生成路由
-  for (const [key, routerConf] of routerMap.entries()) {
+  for (const routerConf of orderedRouterMap.values()) {
     const { method, url, action } = routerConf
-
-    if (!method || !url) {
-      const [fileName, actionName] = key.split('.')
-      warn(`${fileName}.js中的${actionName}方法没有定义相应的路由`)
-      return
-    }
     router[method](url, ...action)
   }
 
