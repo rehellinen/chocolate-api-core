@@ -35,6 +35,7 @@ export default {
   },
   MODEL: {
     CONVERT_FIELDS: true, // 是否自动转换驼峰命名法 / 下划线命名法
+    GET_SIZE: 15, // 通过getAll方法获取数据的数据数量
     PAGE_SIZE: 15 // 分页大小
   }
 }
