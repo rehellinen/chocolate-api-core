@@ -9,16 +9,8 @@ export class UserModel extends Model {
     })
   }
 
-  async getOneUser (id) {
-    const user = await this.getOneById(id)
-    if (!user) {
-      throw new NotFound({ message: '该用户不存在' })
-    }
-    return user
-  }
-
   async getAllUsers () {
-    const users = await new UserModel().getAll({})
+    const users = await this.getAll({})
     if (!users) {
       throw new NotFound({
         message: '用户不存在'
@@ -50,30 +42,11 @@ export class UserModel extends Model {
     await this.create(data)
   }
 
-  async updateUser (user, data) {
-    if (user.account !== data.account) {
-      await this.getUserByAccount(data.account)
-    }
-    await this.updateById(user.id, data)
+  async updateUser (data) {
+    await this.updateById(data.id, data)
   }
 
-  async updateUserAdmin (data) {
-    const user = await this.getOneById(data.id)
-    if (!user) {
-      throw new NotFound({
-        message: '不存在该用户'
-      })
-    }
-    await this.updateUser(user, data)
-    this.json({ message: '更改信息成功' })
-  }
-
-  async updatePassword (user, data) {
-    data.password = generatePwd(data.password)
-    await this.updateById(user.id, data)
-  }
-
-  async updatePasswordAdmin (data) {
+  async updatePassword (data) {
     data.password = generatePwd(data.password)
     await this.updateById(data.id, data)
   }
