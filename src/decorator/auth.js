@@ -1,4 +1,4 @@
-import { NoAuthority, NotFound } from '../exception'
+import {InvalidToken, NoAuthority, NotFound} from '../exception'
 import { middleware } from './decorator'
 import { AdminType, TokenType, UserStatus, verifyToken } from '../utils'
 import { AuthModel, UserModel } from '../model'
@@ -29,7 +29,7 @@ const parseHeader = async (ctx, type = TokenType.ACCESS) => {
 
   const payload = verifyToken(token)
   if (payload.type !== type) {
-    throw new NoAuthority({ message: '令牌类型错误' })
+    throw new InvalidToken({ message: '令牌类型错误' })
   }
   ctx.user = await new UserModel().getUserById(payload.id)
 }
