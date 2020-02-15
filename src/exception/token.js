@@ -5,7 +5,7 @@ class ExpiredToken extends Exception {
     super(config)
     this.setDefault({
       httpCode: 401,
-      status: 30001,
+      status: 20101,
       message: 'Token已过期'
     })
   }
@@ -16,8 +16,8 @@ class InvalidToken extends Exception {
     super(config)
     this.setDefault({
       httpCode: 401,
-      status: 30002,
-      message: '无效Token'
+      status: 20102,
+      message: '令牌类型错误'
     })
   }
 }
@@ -27,8 +27,8 @@ class NoAuthority extends Exception {
     super(config)
     this.setDefault({
       httpCode: 401,
-      status: 30002,
-      message: '权限认证失败'
+      status: 20103,
+      message: '认证失败'
     })
   }
 }

@@ -24,18 +24,14 @@ const parseHeader = async (ctx, type = TokenType.ACCESS) => {
   const res = ctx.header.authorization.split(' ')
   const [prefix, token] = res
   if (res.length !== 2 || prefix.toLowerCase() !== 'bearer') {
-    throw new NoAuthority()
+    throw new NoAuthority('头部解析错误')
   }
 
   const payload = verifyToken(token)
   if (payload.type !== type) {
     throw new NoAuthority({ message: '令牌类型错误' })
   }
-  const user = await new UserModel().getOneById({ id: payload.id })
-  if (!user) {
-    throw new NotFound({ message: '用户不存在' })
-  }
-  ctx.user = user
+  ctx.user = await new UserModel().getUserById(payload.id)
 }
 
 // 只能为有效的refresh_token
