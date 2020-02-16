@@ -1,17 +1,17 @@
-import {InvalidToken, NoAuthority, NotFound} from '../exception'
+import { InvalidToken, NoAuthority } from '../exception'
 import { middleware } from './decorator'
-import { AdminType, TokenType, UserStatus, verifyToken } from '../utils'
+import { TokenType, UserStatus, verifyToken } from '../utils'
 import { AuthModel, UserModel } from '../model'
 
-const isUserEnable = status => {
-  if (status !== UserStatus.ENABLE) {
+const isUserEnable = user => {
+  if (user.status !== UserStatus.ENABLE) {
     throw new NoAuthority({ message: '账户状态异常' })
   }
   return true
 }
 
-const isAdmin = admin => {
-  if (admin !== AdminType.IS) {
+const isAdmin = user => {
+  if (user.status !== UserStatus.ADMIN) {
     throw new NoAuthority({ message: '该用户不是超级管理员' })
   }
   return true
@@ -38,7 +38,7 @@ const parseHeader = async (ctx, type = TokenType.ACCESS) => {
 export const refresh = () => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx, TokenType.REFRESH)
-    isUserEnable(ctx.user.status)
+    isUserEnable(ctx.user)
     await next()
   })
 }
@@ -47,7 +47,7 @@ export const refresh = () => {
 export const login = () => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx)
-    isUserEnable(ctx.user.status)
+    isUserEnable(ctx.user)
     await next()
   })
 }
@@ -56,7 +56,7 @@ export const login = () => {
 export const admin = () => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx)
-    isAdmin(ctx.user.admin)
+    isAdmin(ctx.user)
     await next()
   })
 }
@@ -65,10 +65,10 @@ export const admin = () => {
 export const auth = (auth) => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx)
-    if (isAdmin(ctx.user.admin)) {
+    if (isAdmin(ctx.user)) {
       await next()
     } else {
-      isUserEnable(ctx.user.status)
+      isUserEnable(ctx.user)
       const groupId = ctx.user.groupId
       if (!groupId) {
         throw new NoAuthority({
