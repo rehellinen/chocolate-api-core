@@ -9,16 +9,7 @@ import { validateMap } from '../decorator'
 import { NotFound, ParamsException } from '../exception'
 
 
-class ValidatorMethods {
-  require (key, value, params) {
-    if (typeof value === 'string') {
-      value = value.trim()
-    }
-    return value != null && value !== ''
-  }
-}
-
-export class Validator extends ValidatorMethods {
+export class Validator {
   // 原始的参数列表
   rawParams = {}
 
