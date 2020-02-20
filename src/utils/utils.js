@@ -1,8 +1,3 @@
-/**
- *  utils.js
- *  Create By rehellinen
- *  Create On 2018/9/26 10:21
- */
 import X2JS from 'x2js'
 import { mkdir, stat } from 'fs'
 import { promisify } from 'util'

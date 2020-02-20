@@ -1,9 +1,3 @@
-/**
- *  mime.js
- *  Create By rehellinen
- *  Create On 2018/9/28 17:13
- */
-
 export const types = {
   hqx: 'application/mac-binhex40',
   cpt: 'application/mac-compactpro',

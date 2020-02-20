@@ -1,8 +1,3 @@
-/**
- *  Multer.js
- *  Create By rehellinen
- *  Create On 2019/3/12 12:54
- */
 import Multer from 'koa-multer'
 import { dirExists, getTodayDate, rRoot, generateSalt } from '../utils'
 import { config } from '../class'

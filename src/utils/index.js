@@ -1,6 +1,5 @@
 export * from './mime'
 export * from './utils'
 export * from './upload'
-export * from './token'
 export * from './enum'
 export * from './password'
