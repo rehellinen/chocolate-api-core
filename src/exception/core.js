@@ -44,4 +44,15 @@ class UploadException extends Exception {
   }
 }
 
-export { ParamsException, NotFound, RepeatException, UploadException }
+class Success extends Exception {
+  constructor (config) {
+    super(config)
+    this.setDefault({
+      httpCode: 200,
+      status: 1,
+      message: '成功'
+    })
+  }
+}
+
+export { ParamsException, NotFound, RepeatException, UploadException, Success }

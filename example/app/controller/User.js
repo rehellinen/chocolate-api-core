@@ -38,9 +38,9 @@ class User extends Controller {
     })
   }
 
-  @admin()
+  // @admin()
   async getAll () {
-    const users = await new UserModel().getAllUsers()
+    const users = await UserModel.getAllUsers()
     this.json({
       message: '获取所有用户信息成功',
       data: users

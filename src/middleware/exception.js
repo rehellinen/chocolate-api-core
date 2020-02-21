@@ -8,7 +8,9 @@ export default (app) => {
       ctx.status = parseInt(e.httpCode)
       ctx.type = types.json
       ctx.body = e.getError()
-      ctx.body.request = `${ctx.method} ${ctx.url}`
+      if (!(ctx.status.toString().startsWith('2') || ctx.status === 304)) {
+        ctx.body.request = `${ctx.method} ${ctx.url}`
+      }
     } else {
       if (config.get('debug')) {
         console.log(e)
