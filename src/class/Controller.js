@@ -1,4 +1,5 @@
 import { types } from '../utils'
+import {Success} from '../exception'
 
 export class Controller {
   // koa-router的ctx
@@ -21,12 +22,11 @@ export class Controller {
    * @param data 需要返回的数据
    */
   json ({ status = 1, message = '', httpCode = 200, data = {} }) {
-    this.ctx.type = types.json
-    this.ctx.status = httpCode
-    this.ctx.body = {
+    throw new Success({
       status,
       message,
+      httpCode,
       data
-    }
+    })
   }
 }
