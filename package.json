@@ -4,7 +4,7 @@
   "description": "a API framework based on Koa2",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon --watch ./ --exec node ./example/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon --watch ./ --exec node ./example/index.js",
     "build": "rimraf dist && babel ./src --out-dir ./dist",
     "lint": "eslint ./src --fix",
     "commit": "git-cz"
@@ -22,6 +22,7 @@
     "@babel/runtime": "^7.4.5",
     "babel-eslint": "^10.0.2",
     "commitizen": "^4.0.3",
+    "cross-env": "^7.0.0",
     "eslint": "^6.1.0",
     "eslint-config-standard": "^13.0.1",
     "eslint-plugin-import": "^2.18.2",
@@ -33,10 +34,8 @@
     "rimraf": "^3.0.0"
   },
   "dependencies": {
-    "bookshelf": "^0.13.3",
     "chalk": "^2.4.2",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.20.3",
     "koa": "^2.7.0",
     "koa-multer": "^1.0.2",
     "koa-router": "^8.0.7",
@@ -46,6 +45,7 @@
     "portfinder": "^1.0.21",
     "ramda": "^0.25.0",
     "raw-body": "^2.4.0",
+    "sequelize": "^5.21.5",
     "validator": "^11.1.0",
     "x2js": "^3.3.0"
   },
