@@ -1,5 +1,4 @@
-import { types } from '../utils'
-import {Success} from '../exception'
+import { Success } from '../exception'
 
 export class Controller {
   // koa-router的ctx
