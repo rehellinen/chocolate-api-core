@@ -1,5 +1,4 @@
 export * from './Config'
-export * from './DataBase'
 export * from './Server'
 export * from './Validator'
 export * from './Token'
