@@ -1,10 +1,11 @@
 import { InvalidToken, NoAuthority } from '../exception'
 import { middleware } from './decorator'
-import { TokenType, UserStatus, verifyToken } from '../utils'
+import { TokenType, UserStatus } from '../utils'
 import { AuthModel, UserModel } from '../model'
+import { verifyToken } from '../class'
 
 const isUserEnable = user => {
-  if (user.status !== UserStatus.ENABLE) {
+  if (user.status === UserStatus.DISABLED) {
     throw new NoAuthority({ message: '账户状态异常' })
   }
   return true
@@ -31,7 +32,7 @@ const parseHeader = async (ctx, type = TokenType.ACCESS) => {
   if (payload.type !== type) {
     throw new InvalidToken({ message: '令牌类型错误' })
   }
-  ctx.user = await new UserModel().getUserById(payload.id)
+  ctx.user = await UserModel.getUserById(payload.id)
 }
 
 // 只能为有效的refresh_token
