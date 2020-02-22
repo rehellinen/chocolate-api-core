@@ -1,8 +1,7 @@
 const {
   Controller,
   UserModel,
-  NoAuthority,
-  getTokens, verifyPwd,
+  getAccessToken,
   login, admin, refresh, validate
 } = require('libs')
 
@@ -10,27 +9,9 @@ class User extends Controller {
   @validate('user.login')
   async login () {
     const params = this.ctx.checkedParams
-    const user = await new UserModel().getUserByAccount(params.account)
-    if (verifyPwd(params.password, user.password)) {
-      const [accessToken, refreshToken] = getTokens(user.id)
-      this.json({
-        message: '获取Token成功',
-        data: {
-          accessToken,
-          refreshToken
-        }
-      })
-    } else {
-      throw new NoAuthority({ message: '密码错误' })
-    }
-  }
-
-  @refresh()
-  async refresh () {
-    const user = this.ctx.user
-    const [accessToken, refreshToken] = getTokens(user.id)
+    const [accessToken, refreshToken] = await UserModel.login(params)
     this.json({
-      message: '刷新Token成功',
+      message: '获取Token成功',
       data: {
         accessToken,
         refreshToken
@@ -38,9 +19,21 @@ class User extends Controller {
     })
   }
 
-  // @admin()
+  @refresh()
+  async refresh () {
+    const user = this.ctx.user
+    const accessToken = getAccessToken(user.id)
+    this.json({
+      message: '刷新Token成功',
+      data: { accessToken }
+    })
+  }
+
+  @admin()
+  @validate('base.page')
   async getAll () {
-    const users = await UserModel.getAllUsers()
+    const { page, pageSize } = this.ctx.checkedParams
+    const users = await UserModel.getAllUsers(page, pageSize)
     this.json({
       message: '获取所有用户信息成功',
       data: users
@@ -50,25 +43,28 @@ class User extends Controller {
   @admin()
   @validate('user.create')
   async create () {
-    await new UserModel().createUser(this.ctx.checkedParams)
+    await UserModel.createUser(this.ctx.checkedParams)
     this.json({ message: '添加用户成功' })
   }
 
   @admin()
   @validate('user.update')
   async update () {
-    await new UserModel().updateUser(this.ctx.checkedParams)
+    await UserModel.updateUser(this.ctx.checkedParams)
     this.json({ message: '更新信息成功' })
   }
 
   @admin()
+  @validate('base.id')
   async delete () {
+    await UserModel.deleteUser(this.ctx.checkedParams.id)
+    this.json({ message: '删除用户成功' })
   }
 
   @admin()
   @validate('user.password')
   async password () {
-    await new UserModel().updatePassword(this.ctx.checkedParams)
+    await UserModel.updateUser(this.ctx.checkedParams)
     this.json({ message: '更新用户密码成功' })
   }
 
@@ -85,7 +81,7 @@ class User extends Controller {
   @validate('user.userPassword')
   async userPassword () {
     this.ctx.checkedParams.id = this.ctx.user.id
-    await new UserModel().updatePassword(this.ctx.checkedParams)
+    await UserModel.updateUser(this.ctx.checkedParams)
     this.json({ message: '更改密码成功' })
   }
 
@@ -93,7 +89,7 @@ class User extends Controller {
   @validate('user.userUpdate')
   async userUpdate () {
     this.ctx.checkedParams.id = this.ctx.user.id
-    await new UserModel().updateUser(this.ctx.checkedParams)
+    await UserModel.updateUser(this.ctx.checkedParams)
     this.json({ message: '更新信息成功' })
   }
 
@@ -101,7 +97,7 @@ class User extends Controller {
   @validate('user.avatar')
   async avatar () {
     this.ctx.checkedParams.id = this.ctx.user.id
-    await new UserModel().updateUser(this.ctx.checkedParams)
+    await UserModel.updateUser(this.ctx.checkedParams)
     this.json({ message: '更新头像成功' })
   }
 }
