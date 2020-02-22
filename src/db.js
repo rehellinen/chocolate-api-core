@@ -19,7 +19,7 @@ const dbConfig = Object.assign(defaultConf, userConf)
 const sequelize = new Sequelize(dbConfig)
 
 sequelize.sync({
-  force: true
+  force: false
 })
 
 export { sequelize }
