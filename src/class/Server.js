@@ -9,9 +9,11 @@ import chalk from 'chalk'
 import portfinder from 'portfinder'
 import { rCore, rRoot, warn } from '../utils'
 import { Controller } from './Controller'
-import { Model } from './Model'
 import { config } from './Config'
 import { Exception } from '../exception'
+import { initUserModel } from '../model'
+import { initRoleModel } from '../model/Role'
+import { initAuthModel } from '../model/Auth'
 
 export class Server {
   // Koa2实例
@@ -59,8 +61,10 @@ export class Server {
     Controller.prototype.app = this.app
     Controller.prototype.config = config.get()
     // 初始化Model
-    Model.prototype.config = config.get()
-    Model.prototype.modelConfig = config.get('model')
+    const { sequelize } = require('../db')
+    initRoleModel(sequelize)
+    initUserModel(sequelize)
+    initAuthModel(sequelize)
   }
 
   async checkPort () {
@@ -82,6 +86,7 @@ export class Server {
 
   static processError (e) {
     if (e instanceof Exception) {
+      console.log(e)
       console.log(chalk.red(`Error: ${e.message}`))
     } else {
       console.log(e)
