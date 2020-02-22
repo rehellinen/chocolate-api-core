@@ -4,15 +4,15 @@
  *  Create On 2018/10/12 22:38
  */
 import { rule, Validator, extend } from 'libs'
-import { BaseValidator } from './BaseValidator'
+import { Base } from './Base'
 
-@extend(BaseValidator)
+@extend(Base)
 class User extends Validator {
   scene = {
     login: ['account', 'password'],
-    create: ['account', 'name', 'password', 'avatar', 'groupId', 'status', 'admin'],
-    update: ['id', 'account', 'name', 'avatar', 'groupId', 'status', 'admin'],
-    userUpdate: ['account', 'name', 'avatar', 'groupId', 'status', 'admin'],
+    create: ['account', 'name', 'password', 'avatar', 'roleId', 'status'],
+    update: ['id', 'account', 'name', 'avatar', 'roleId', 'status'],
+    userUpdate: ['account', 'name', 'avatar', 'roleId', 'status'],
     password: ['id', 'password'],
     userPassword: ['password'],
     avatar: ['avatar']
@@ -29,15 +29,11 @@ class User extends Validator {
 
   @rule('require', '权限组ID不能为空')
   @rule('isInt', '权限组ID必须为正整数', { min: 1 })
-  groupId
+  roleId
 
   @rule('require', '状态不能为空')
-  @rule('isInt', '状态范围错误', { min: 0, max: 1 })
+  @rule('isInt', '状态范围错误', { min: 0, max: 2 })
   status
-
-  @rule('require', `'是否为管理员'不能为空`)
-  @rule('isInt', 'admin范围错误', { min: 0, max: 1 })
-  admin
 }
 
 export { User }

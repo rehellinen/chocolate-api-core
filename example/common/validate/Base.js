@@ -1,7 +1,8 @@
 const { Validator, rule } = require('libs')
 
-export class BaseValidator extends Validator {
+export class Base extends Validator {
   scene = {
+    id: ['id'],
     page: ['page', 'pageSize']
   }
 
