@@ -8,6 +8,14 @@ import { getParams, isFunction, toString } from '../utils'
 import { validateMap } from '../decorator'
 import { NotFound, ParamsException } from '../exception'
 
+const methods = {
+  require (key, value, params) {
+    if (typeof value === 'string') {
+      value = value.trim()
+    }
+    return value != null && value !== ''
+  }
+}
 
 export class Validator {
   // 原始的参数列表
@@ -104,12 +112,20 @@ export class Validator {
    */
   async _validate (rule) {
     const [funcName, errInfo, funcParams] = rule
-
-    if (isFunction(this[funcName])) {
-      // 优先使用自定义验证函数
-      if (!await this[funcName](this._key, this.rawParams[this._key], this.rawParams, ...funcParams)) {
+    const validate = async (func) => {
+      const key = this._key
+      const val = this.rawParams[this._key]
+      const res = await func(key, val, this.rawParams, ...funcParams)
+      if (!res) {
         this._addError(errInfo)
       }
+    }
+    if (isFunction(this[funcName])) {
+      // 优先使用自定义验证函数
+      await validate(this[funcName])
+    } else if (isFunction(methods[funcName])) {
+      // 优先使用自定义验证函数
+      await validate(methods[funcName])
     } else if (isFunction(validator[funcName])) {
       // 第三方库 - validator.js
       if (!validator[funcName](this._value, ...funcParams)) {
