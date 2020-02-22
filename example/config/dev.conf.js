@@ -4,12 +4,11 @@ export default {
   URL_PREFIX: 'http:127.0.0.1:3000/',
   // 开发环境数据库配置
   DATABASE: {
-    // TODO: create / update time改为必选（Navicat）
+    // TODO：支持define
     host: '',
     port: 3306,
-    user: 'root',
+    username: 'root',
     password: '',
-    database: '',
-    charset: 'utf8'
+    database: 'chocolate'
   }
 }
