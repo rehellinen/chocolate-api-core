@@ -3,10 +3,9 @@ export const TokenType = {
   REFRESH: 'REFRESH'
 }
 
-export const UserStatus = {
-  ADMIN: 2,
-  ENABLE: 1,
-  DISABLED: 0
+export const IS_ADMIN = {
+  IS: 1,
+  NOT: 0
 }
 
 export const types = {

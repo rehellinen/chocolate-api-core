@@ -1,18 +1,11 @@
 import { InvalidToken, NoAuthority } from '../exception'
 import { middleware } from './decorator'
-import { TokenType, UserStatus } from '../utils'
+import { TokenType, IS_ADMIN } from '../utils'
 import { AuthModel, UserModel } from '../model'
 import { verifyToken } from '../class'
 
-const isUserEnable = user => {
-  if (user.status === UserStatus.DISABLED) {
-    throw new NoAuthority({ message: '账户状态异常' })
-  }
-  return true
-}
-
 const isAdmin = user => {
-  if (user.status !== UserStatus.ADMIN) {
+  if (user.isAdmin !== IS_ADMIN.IS) {
     throw new NoAuthority({ message: '该用户不是超级管理员' })
   }
   return true
@@ -39,7 +32,6 @@ const parseHeader = async (ctx, type = TokenType.ACCESS) => {
 export const refresh = () => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx, TokenType.REFRESH)
-    isUserEnable(ctx.user)
     await next()
   })
 }
@@ -48,7 +40,6 @@ export const refresh = () => {
 export const login = () => {
   return middleware(async (ctx, next) => {
     await parseHeader(ctx)
-    isUserEnable(ctx.user)
     await next()
   })
 }
@@ -69,7 +60,6 @@ export const auth = (auth) => {
     if (isAdmin(ctx.user)) {
       await next()
     } else {
-      isUserEnable(ctx.user)
       const groupId = ctx.user.groupId
       if (!groupId) {
         throw new NoAuthority({
