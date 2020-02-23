@@ -89,11 +89,6 @@ export class UserModel extends BaseModel {
       where: { id }
     })
   }
-
-  async updatePassword (data) {
-    data.password = generatePwd(data.password)
-    await this.updateById(data.id, data)
-  }
 }
 
 export const initUserModel = (db) => {
