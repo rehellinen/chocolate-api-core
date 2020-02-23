@@ -10,11 +10,11 @@ import { Base } from './Base'
 class User extends Validator {
   scene = {
     login: ['account', 'password'],
-    create: ['account', 'name', 'password', 'avatar', 'roleId', 'status'],
-    update: ['id', 'account', 'name', 'avatar', 'roleId', 'status'],
-    userUpdate: ['account', 'name', 'avatar', 'roleId', 'status'],
+    create: ['account', 'name', 'password', 'avatar', 'roleId'],
+    update: ['id', 'account', 'name', 'avatar', 'roleId'],
+    userUpdate: ['account', 'name', 'avatar', 'roleId'],
     password: ['id', 'password'],
-    userPassword: ['password'],
+    userPassword: ['oldPassword', 'newPassword'],
     avatar: ['avatar']
   }
 
@@ -26,6 +26,12 @@ class User extends Validator {
 
   @rule('require', '密码不能为空')
   password
+
+  @rule('require', '原密码不能为空')
+  oldPassword
+
+  @rule('require', '新密码不能为空')
+  newPassword
 
   @rule('require', '头像不能为空')
   avatar

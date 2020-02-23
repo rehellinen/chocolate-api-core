@@ -89,6 +89,16 @@ export class UserModel extends BaseModel {
       where: { id }
     })
   }
+
+  static async UserUpdatePwd ({ oldPassword, newPassword }, { id, password }) {
+    if (generatePwd(oldPassword) !== password) {
+      throw new NoAuthority({ message: '原密码不正确' })
+    }
+    await this.updateUser({
+      id,
+      password: newPassword
+    })
+  }
 }
 
 export const initUserModel = (db) => {
@@ -118,10 +128,10 @@ export const initUserModel = (db) => {
       type: Sequelize.STRING,
       allowNull: false
     },
-    status: {
+    isAdmin: {
       type: Sequelize.INTEGER,
       allowNull: false,
-      defaultValue: 1
+      defaultValue: 0
     },
     order: {
       type: Sequelize.INTEGER,
