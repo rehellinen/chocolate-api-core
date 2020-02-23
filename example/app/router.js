@@ -23,4 +23,12 @@ prefix('files', [
   })
 ])
 
+prefix('role', [
+  rest('role')
+])
+
+prefix('auth', [
+  rest('auth')
+])
+
 

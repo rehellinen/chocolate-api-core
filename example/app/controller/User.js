@@ -41,6 +41,16 @@ class User extends Controller {
   }
 
   @admin()
+  @validate('base.id')
+  async getOne () {
+    const user = await UserModel.getUserById(this.ctx.checkedParams.id)
+    this.json({
+      message: '获取用户信息成功',
+      data: user
+    })
+  }
+
+  @admin()
   @validate('user.create')
   async create () {
     await UserModel.createUser(this.ctx.checkedParams)
