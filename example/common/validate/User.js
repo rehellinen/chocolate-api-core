@@ -18,6 +18,9 @@ class User extends Validator {
     avatar: ['avatar']
   }
 
+  @rule('require', '名称不能为空')
+  name
+
   @rule('require', '登录账户不能为空')
   account
 
