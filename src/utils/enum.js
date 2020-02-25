@@ -3,11 +3,6 @@ export const TokenType = {
   REFRESH: 'REFRESH'
 }
 
-export const IS_ADMIN = {
-  IS: 1,
-  NOT: 0
-}
-
 export const types = {
   hqx: 'application/mac-binhex40',
   cpt: 'application/mac-compactpro',

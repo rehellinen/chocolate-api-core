@@ -5,7 +5,7 @@ import { AuthModel, UserModel } from '../model'
 import { verifyToken } from '../class'
 
 const isAdmin = user => {
-  if (user.isAdmin !== IS_ADMIN.IS) {
+  if (!user.isAdmin) {
     throw new NoAuthority({ message: '该用户不是超级管理员' })
   }
   return true
