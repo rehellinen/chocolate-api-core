@@ -90,13 +90,22 @@ export class UserModel extends BaseModel {
     })
   }
 
+  static async updatePwd ({ id, password }) {
+    await this.update({
+      password
+    }, {
+      where: { id }
+    })
+  }
+
   static async UserUpdatePwd ({ oldPassword, newPassword }, { id, password }) {
-    if (generatePwd(oldPassword) !== password) {
+    if (!verifyPwd(oldPassword, password)) {
       throw new NoAuthority({ message: '原密码不正确' })
     }
-    await this.updateUser({
-      id,
+    await this.update({
       password: newPassword
+    }, {
+      where: { id }
     })
   }
 }
@@ -129,9 +138,9 @@ export const initUserModel = (db) => {
       allowNull: false
     },
     isAdmin: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.BOOLEAN,
       allowNull: false,
-      defaultValue: 0
+      defaultValue: false
     },
     order: {
       type: Sequelize.INTEGER,
