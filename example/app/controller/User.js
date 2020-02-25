@@ -74,7 +74,7 @@ class User extends Controller {
   @admin()
   @validate('user.password')
   async password () {
-    await UserModel.updatePwd(this.ctx.checkedParams)
+    await UserModel.updateUser(this.ctx.checkedParams)
     this.json({ message: '更新用户密码成功' })
   }
 

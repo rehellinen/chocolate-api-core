@@ -60,7 +60,9 @@ export class UserModel extends BaseModel {
   }
 
   static async updateUser (data) {
-    await this.isAccountExisted(data.account, data.id)
+    if (data.account) {
+      await this.isAccountExisted(data.account, data.id)
+    }
     await this.update(data, {
       where: { id: data.id }
     })
@@ -86,14 +88,6 @@ export class UserModel extends BaseModel {
   static async deleteUser (id) {
     await this.getUserById(id)
     await this.destroy({
-      where: { id }
-    })
-  }
-
-  static async updatePwd ({ id, password }) {
-    await this.update({
-      password
-    }, {
       where: { id }
     })
   }
