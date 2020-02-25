@@ -7,6 +7,7 @@ import { rule, Validator, extend } from 'libs'
 import { Base } from './Base'
 
 @extend(Base)
+// TODO: isAdmin换成布尔值
 class User extends Validator {
   scene = {
     login: ['account', 'password'],
@@ -39,10 +40,6 @@ class User extends Validator {
   @rule('require', '权限组ID不能为空')
   @rule('isInt', '权限组ID必须为正整数', { min: 1 })
   roleId
-
-  @rule('require', '状态不能为空')
-  @rule('isInt', '状态范围错误', { min: 0, max: 2 })
-  status
 }
 
 export { User }
