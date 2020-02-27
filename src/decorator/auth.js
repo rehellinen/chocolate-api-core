@@ -1,6 +1,6 @@
 import { InvalidToken, NoAuthority } from '../exception'
 import { middleware } from './decorator'
-import { TokenType, IS_ADMIN } from '../utils'
+import { TokenType } from '../utils'
 import { AuthModel, UserModel } from '../model'
 import { verifyToken } from '../class'
 
