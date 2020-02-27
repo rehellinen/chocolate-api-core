@@ -13,10 +13,10 @@ class Role extends Validator {
     update: ['id', 'name', 'desc']
   }
 
-  @rule('require', '登录账户不能为空')
+  @rule('require', '名称不能为空')
   name
 
-  @rule('require', '密码不能为空')
+  @rule('require', '描述不能为空')
   desc
 }
 
