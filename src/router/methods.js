@@ -16,7 +16,7 @@ const baseMethod = (url, exp, method) => {
   const actionName = pathArr.pop()
   const fileName = firstUpperCase(pathArr.pop())
   const ctorPath = rRoot(config.get('dir.module').app, 'controller', pathArr.join('/'), fileName)
-  const Ctor = require(ctorPath).default
+  const Ctor = require(ctorPath)[fileName]
 
   if (!Ctor.prototype[actionName]) {
     warn(`${fileName}.js中的${actionName}方法不存在`)

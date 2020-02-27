@@ -1,6 +1,6 @@
 const { Controller, config, upload, middleware, getTodayDate, UploadException } = require('libs')
 
-class Files extends Controller {
+export class Files extends Controller {
   @middleware(upload())
   image () {
     if (!this.ctx.req.file) {
@@ -19,5 +19,3 @@ class Files extends Controller {
     })
   }
 }
-
-export default Files

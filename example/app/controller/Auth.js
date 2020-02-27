@@ -4,7 +4,7 @@ const {
   admin, validate
 } = require('libs')
 
-class Auth extends Controller {
+export class Auth extends Controller {
   @admin()
   @validate('base.page')
   async getAll () {
@@ -47,5 +47,3 @@ class Auth extends Controller {
     this.json({ message: '删除权限信息成功' })
   }
 }
-
-export default Auth

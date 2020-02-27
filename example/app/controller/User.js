@@ -5,7 +5,7 @@ const {
   login, admin, refresh, validate
 } = require('libs')
 
-class User extends Controller {
+export class User extends Controller {
   @validate('user.login')
   async login () {
     const params = this.ctx.checkedParams
@@ -110,5 +110,3 @@ class User extends Controller {
     this.json({ message: '更新头像成功' })
   }
 }
-
-export default User

@@ -5,7 +5,7 @@ const {
   validate
 } = require('libs')
 
-class Role extends Controller {
+export class Role extends Controller {
   @admin()
   @validate('base.page')
   async getAll () {
@@ -48,5 +48,3 @@ class Role extends Controller {
     this.json({ message: '删除角色成功' })
   }
 }
-
-export default Role
