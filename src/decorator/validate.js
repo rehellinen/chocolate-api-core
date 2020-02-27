@@ -1,7 +1,7 @@
 import { firstUpperCase, isClass, isFunction, rRoot } from '../utils'
 import { middleware } from './decorator'
 import { InvalidParams, FilesNotFound } from '../exception'
-import { config } from '../class'
+import { getConfig } from '../class'
 
 export const validateMap = new Map()
 
@@ -19,7 +19,7 @@ export const validate = (conf) => {
   }
 
   name = firstUpperCase(name)
-  const path = rRoot(config.get('dir.validate'), `${name}.js`)
+  const path = rRoot(getConfig('dir.validate'), `${name}.js`)
   let file
   try {
     file = require(path)

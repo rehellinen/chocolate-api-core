@@ -1,4 +1,4 @@
-import { config } from '../class'
+import { getConfig } from '../class'
 import { warn, firstUpperCase, isPlainObject, rRoot } from '../utils'
 import { normalizePath, orderedRouterMap, routerMap } from './utils'
 
@@ -15,7 +15,7 @@ const baseMethod = (url, exp, method) => {
   const pathArr = exp.split('.')
   const actionName = pathArr.pop()
   const fileName = firstUpperCase(pathArr.pop())
-  const ctorPath = rRoot(config.get('dir.module').app, 'controller', pathArr.join('/'), fileName)
+  const ctorPath = rRoot(getConfig('dir.module').app, 'controller', pathArr.join('/'), fileName)
   const Ctor = require(ctorPath)[fileName]
 
   if (!Ctor.prototype[actionName]) {

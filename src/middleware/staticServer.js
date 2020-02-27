@@ -6,7 +6,7 @@
 import server from 'koa-static-server'
 import { rRoot } from '../utils'
 
-export default app => {
+export const staticServer = app => {
   app.use(server({
     rootDir: rRoot('upload')
   }))

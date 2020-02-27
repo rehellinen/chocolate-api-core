@@ -5,7 +5,7 @@
  */
 import jwt, { TokenExpiredError } from 'jsonwebtoken'
 import { ExpiredToken, InvalidToken } from '../exception'
-import { config } from './Config'
+import { getConfig } from './Config'
 import { TokenType } from '../utils'
 
 export class Token {
@@ -33,9 +33,9 @@ export class Token {
    * @param refreshExpire refresh_token过期时间
    */
   constructor ({ secret, accessExpire, refreshExpire } = {}) {
-    this.secret = secret || config.get('token.secret')
-    this.accessExpire = accessExpire || config.get('token.access_expires_in')
-    this.refreshExpire = refreshExpire || config.get('token.refresh_expires_in')
+    this.secret = secret || getConfig('token.secret')
+    this.accessExpire = accessExpire || getConfig('token.access_expires_in')
+    this.refreshExpire = refreshExpire || getConfig('token.refresh_expires_in')
   }
 
   /**

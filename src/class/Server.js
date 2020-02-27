@@ -9,27 +9,25 @@ import chalk from 'chalk'
 import portfinder from 'portfinder'
 import { rCore, rRoot, warn } from '../utils'
 import { Controller } from './Controller'
-import { config } from './Config'
+import { getConfig } from './Config'
 import { Exception } from '../exception'
-import { initUserModel } from '../model'
-import { initRoleModel } from '../model/Role'
-import { initAuthModel } from '../model/Auth'
+import { initUserModel, initRoleModel, initAuthModel } from '../model'
 
 export class Server {
   // Koa2实例
   app = new Koa()
 
   // 中间件配置
-  middlewares = ['exception', 'response', 'router', 'static']
+  middlewares = ['exception', 'response', 'router', 'staticServer']
 
   // 监听IP
-  host = process.env.HOST || config.get('host') || '127.0.0.1'
+  host = process.env.HOST || getConfig('host') || '127.0.0.1'
 
   // 监听端口
-  port = process.env.PORT || config.get('port') || 3000
+  port = process.env.PORT || getConfig('port') || 3000
 
   constructor () {
-    if (config.get('cors.open')) {
+    if (getConfig('cors.open')) {
       this.middlewares.splice(1, 0, 'cors')
     }
   }
@@ -37,12 +35,8 @@ export class Server {
   async start () {
     try {
       // 添加中间件，先添加框架的中间件，再添加用户自定义的
-      this.useMiddlewares(
-        rCore('middleware')
-      )(this.middlewares)
-      this.useMiddlewares(
-        rRoot(config.get('DIR.MIDDLEWARE'))
-      )(config.get('MIDDLEWARE') || [])
+      this.useMiddlewares(rCore('middleware'), this.middlewares)
+      this.useMiddlewares(rRoot(getConfig('DIR.MIDDLEWARE')), getConfig('MIDDLEWARE'))
       // 初始化框架类库
       this.initLibs()
       // 判断端口号是否占用
@@ -59,7 +53,7 @@ export class Server {
   initLibs () {
     // 初始化Controller
     Controller.prototype.app = this.app
-    Controller.prototype.config = config.get()
+    Controller.prototype.config = getConfig()
     // 初始化Model
     const { sequelize } = require('../db')
     initRoleModel(sequelize)
@@ -76,12 +70,11 @@ export class Server {
     }
   }
 
-  useMiddlewares (path) {
-    return R.map(R.pipe(
-      item => `${path}/${item}`,
-      require,
-      R.map(item => item(this.app))
-    ))
+  useMiddlewares (path, names = []) {
+    for (const name of names) {
+      const middleware = require(`${path}/${name}.js`)[name]
+      middleware(this.app)
+    }
   }
 
   static processError (e) {

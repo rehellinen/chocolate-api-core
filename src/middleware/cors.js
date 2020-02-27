@@ -4,10 +4,10 @@
  *  Create On 2019/3/4 11:50
  */
 import koaCors from 'koa2-cors'
-import { config } from '../class'
+import { getConfig } from '../class'
 
-export default app => {
-  const corsConfig = config.get('cors')
+export const cors = app => {
+  const corsConfig = getConfig('cors')
 
   app.use(koaCors({
     origin: corsConfig.ORIGIN || '*',

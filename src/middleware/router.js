@@ -6,12 +6,12 @@
 import Router from 'koa-router'
 import { rRoot } from '../utils'
 import { orderedRouterMap } from '../router'
-import { config } from '../class'
+import { getConfig } from '../class'
 
-export default app => {
+export const router = app => {
   const router = new Router()
   // 执行路由文件
-  const routerPath = rRoot(config.get('dir.module').app, 'router.js')
+  const routerPath = rRoot(getConfig('dir.module').app, 'router.js')
   require(routerPath)
 
   // 生成路由

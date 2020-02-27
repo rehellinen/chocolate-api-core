@@ -2,7 +2,7 @@ import { types } from '../utils'
 import { config } from '../class'
 import { Exception } from '../exception'
 
-export default (app) => {
+export const exception = (app) => {
   const processError = (e, ctx) => {
     if (e instanceof Exception) {
       ctx.status = parseInt(e.httpCode)
@@ -12,7 +12,7 @@ export default (app) => {
         ctx.body.request = `${ctx.method} ${ctx.url}`
       }
     } else {
-      if (config.get('debug')) {
+      if (getConfig('debug')) {
         console.log(e)
         ctx.status = 500
         ctx.type = types.json

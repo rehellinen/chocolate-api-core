@@ -9,7 +9,7 @@ moduleAlias.addAliases({
 })
 
 // 加载配置文件
-const { Server, config } = require('libs')
-config.load('example/config')
+const { Server, loadConfig } = require('libs')
+loadConfig('example/config')
 
 new Server().start()

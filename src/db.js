@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize'
-import { config } from './class'
+import { getConfig } from './class'
 
-const userConf = config.get('database')
+const userConf = getConfig('database')
 const defaultConf = {
   dialect: 'mysql',
   logging: false,

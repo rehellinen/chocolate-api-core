@@ -1,12 +1,12 @@
 import Multer from 'koa-multer'
 import { dirExists, getTodayDate, rRoot, generateSalt } from '../utils'
-import { config } from '../class'
+import { getConfig } from '../class'
 
 export const upload = () => async (ctx, next) => {
   // 获取当前年月日组合而成的字符串
   const today = getTodayDate()
   // 判断是否有存放文件的文件夹
-  const destination = rRoot(`${config.get('UPLOAD.DIR')}/${today}`)
+  const destination = rRoot(`${getConfig('UPLOAD.DIR')}/${today}`)
   await dirExists(destination)
   // koa-multer中间件
   const storage = Multer.diskStorage({
@@ -18,5 +18,5 @@ export const upload = () => async (ctx, next) => {
     }
   })
   await Multer({ storage })
-    .single(config.get('UPLOAD.NAME'))(ctx, next)
+    .single(getConfig('UPLOAD.NAME'))(ctx, next)
 }
