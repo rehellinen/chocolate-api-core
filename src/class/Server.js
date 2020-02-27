@@ -4,7 +4,6 @@
  *  Create On 2019/3/19 22:39
  */
 import Koa from 'koa'
-import R from 'ramda'
 import chalk from 'chalk'
 import portfinder from 'portfinder'
 import { rCore, rRoot, warn } from '../utils'
