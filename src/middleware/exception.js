@@ -1,5 +1,5 @@
 import { types } from '../utils'
-import { config } from '../class'
+import { getConfig } from '../class'
 import { Exception } from '../exception'
 
 export const exception = (app) => {
