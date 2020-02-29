@@ -1,6 +1,6 @@
-import {UserModel} from './User'
-import {RoleModel} from './Role'
-import {AuthModel} from './Auth'
+import { UserModel } from './User'
+import { RoleModel } from './Role'
+import { AuthModel } from './Auth'
 
 export * from './User'
 export * from './Auth'

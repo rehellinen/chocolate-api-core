@@ -1,4 +1,4 @@
-const { get, post, put, del, prefix, rest } = require('libs')
+const { get, post, put, prefix, rest } = require('libs')
 
 prefix('user', [
   get({

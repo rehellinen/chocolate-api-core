@@ -3,8 +3,8 @@
  *  Create By rehellinen
  *  Create On 2018/10/12 22:38
  */
-import { rule, Validator, extend } from 'libs'
-import { Base } from './Base'
+const { rule, Validator, extend } = require('libs')
+const { Base } = require('./Base')
 
 @extend(Base)
 class Role extends Validator {

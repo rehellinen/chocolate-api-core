@@ -1,8 +1,7 @@
-import {AuthModel} from '../../../src/model'
-
 const {
   Controller,
   RoleModel,
+  AuthModel,
   admin,
   validate
 } = require('libs')

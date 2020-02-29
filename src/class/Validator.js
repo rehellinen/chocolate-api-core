@@ -4,7 +4,7 @@
  *  Create On 2018/10/12 21:21
  */
 import validator from 'validator'
-import {getParams, isFunction, isObject, toString} from '../utils'
+import { getParams, isFunction, isObject, toString } from '../utils'
 import { validateMap } from '../decorator'
 import { NotFound, ParamsException } from '../exception'
 
