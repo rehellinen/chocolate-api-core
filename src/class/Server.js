@@ -10,7 +10,7 @@ import { rCore, rRoot, warn } from '../utils'
 import { Controller } from './Controller'
 import { getConfig } from './Config'
 import { Exception } from '../exception'
-import { initUserModel, initRoleModel, initAuthModel } from '../model'
+import { initUserModel, initRoleModel, initAuthModel, initRelation } from '../model'
 
 export class Server {
   // Koa2实例
@@ -58,6 +58,7 @@ export class Server {
     initRoleModel(sequelize)
     initUserModel(sequelize)
     initAuthModel(sequelize)
+    initRelation(sequelize)
   }
 
   async checkPort () {

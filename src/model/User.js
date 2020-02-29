@@ -36,7 +36,8 @@ export class UserModel extends BaseModel {
 
   static async getUserByAccount (account) {
     const user = await this.findOne({
-      where: { account }
+      where: { account },
+      include: [{ model: RoleModel }]
     })
     if (!user) {
       throw new NotFound({ message: '该账号不存在' })
@@ -46,7 +47,8 @@ export class UserModel extends BaseModel {
 
   static async getUserById (id) {
     const user = await this.findOne({
-      where: { id }
+      where: { id },
+      include: [{ model: RoleModel }]
     })
     if (!user) {
       throw new NotFound({ message: '该用户不存在' })
@@ -146,6 +148,4 @@ export const initUserModel = (db) => {
     modelName: 'user',
     tableName: 'cms_user'
   })
-
-  UserModel.belongsTo(RoleModel)
 }
