@@ -110,11 +110,8 @@ export class User extends Controller {
     this.json({ message: '更新头像成功' })
   }
 
-  async auth () {
-  }
-
   @login()
-  async userAuth () {
+  async auth () {
     if (this.ctx.user.isAdmin) {
       this.json({ message: '该用户为超级管理员，拥有所有权限' })
     }

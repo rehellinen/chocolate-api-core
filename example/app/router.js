@@ -3,8 +3,7 @@ const { get, post, put, prefix, rest } = require('libs')
 prefix('user', [
   get({
     self: 'user.userGet', // 用户获取信息
-    auth: 'user.userAuth', // 用户获取自己的所有权限
-    '/:id/auth': 'user.auth' // 管理员获取用户的所有权限
+    auth: 'user.auth' // 用户获取自己的所有权限
   }),
   post({
     login: 'user.login', // 登录
