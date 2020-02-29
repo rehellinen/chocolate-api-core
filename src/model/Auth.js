@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize'
+import { Sequelize, Op } from 'sequelize'
 import { NotFound } from '../exception'
 import { BaseModel } from './BaseModel'
 
@@ -8,12 +8,28 @@ export class AuthModel extends BaseModel {
       page,
       pageSize
     })
-    if (data.data.length === 0) {
+    if (this.isEmpty(data.data)) {
       throw new NotFound({
         message: '权限信息不存在'
       })
     }
     return data
+  }
+
+  static async getAuthByIds (ids) {
+    const auth = await this.findAll({
+      where: {
+        id: {
+          [Op.in]: ids
+        }
+      }
+    })
+    if (this.isEmpty(auth)) {
+      throw new NotFound({
+        message: '权限信息不存在'
+      })
+    }
+    return auth
   }
 
   static async getAuthById (id) {

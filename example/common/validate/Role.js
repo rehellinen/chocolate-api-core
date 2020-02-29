@@ -9,6 +9,8 @@ import { Base } from './Base'
 @extend(Base)
 class Role extends Validator {
   scene = {
+    getAuth: ['roleId'],
+    auth: ['roleId', 'authIds'],
     create: ['name', 'desc'],
     update: ['id', 'name', 'desc']
   }
@@ -18,6 +20,12 @@ class Role extends Validator {
 
   @rule('require', '描述不能为空')
   desc
+
+  @rule('require', '角色ID不能为空')
+  roleId
+
+  @rule('require', '权限ID不能为空')
+  authIds
 }
 
 export { Role }

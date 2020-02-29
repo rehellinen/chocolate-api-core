@@ -8,7 +8,7 @@ export class RoleModel extends BaseModel {
       page,
       pageSize
     })
-    if (data.data.length === 0) {
+    if (this.isEmpty(data.data)) {
       throw new NotFound({
         message: '分组数据不存在'
       })

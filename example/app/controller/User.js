@@ -109,4 +109,21 @@ export class User extends Controller {
     await UserModel.updateUser(this.ctx.checkedParams)
     this.json({ message: '更新头像成功' })
   }
+
+  async auth () {
+  }
+
+  @login()
+  async userAuth () {
+    if (this.ctx.user.isAdmin) {
+      this.json({ message: '该用户为超级管理员，拥有所有权限' })
+    }
+
+    const roleId = this.ctx.user.roleId
+    const auth = await UserModel.getAuth(roleId)
+    this.json({
+      message: '获取权限信息成功',
+      data: auth
+    })
+  }
 }

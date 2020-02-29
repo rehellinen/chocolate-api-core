@@ -26,7 +26,7 @@ export class UserModel extends BaseModel {
         }]
       }
     })
-    if (data.data.length === 0) {
+    if (this.isEmpty(data.data)) {
       throw new NotFound({
         message: '用户数据不存在'
       })
@@ -103,6 +103,14 @@ export class UserModel extends BaseModel {
     }, {
       where: { id }
     })
+  }
+
+  static async getAuth (roleId) {
+    const role = await RoleModel.getRoleById(roleId)
+    const auth = await role.getAuths({
+      attributes: ['id', 'name', 'desc', 'order']
+    })
+    return auth
   }
 }
 

@@ -1,3 +1,5 @@
+import {AuthModel} from '../../../src/model'
+
 const {
   Controller,
   RoleModel,
@@ -46,5 +48,27 @@ export class Role extends Controller {
   async delete () {
     await RoleModel.deleteRole(this.ctx.checkedParams.id)
     this.json({ message: '删除角色成功' })
+  }
+
+  @admin()
+  @validate('role.getAuth')
+  async getAuth () {
+    const { roleId } = this.ctx.checkedParams
+    const role = await RoleModel.getRoleById(roleId)
+    const auth = await role.getAuths()
+    this.json({
+      message: '获取权限成功',
+      data: auth
+    })
+  }
+
+  @admin()
+  @validate('role.auth')
+  async setAuth () {
+    const { roleId, authIds } = this.ctx.checkedParams
+    const auth = await AuthModel.getAuthByIds(authIds)
+    const role = await RoleModel.getRoleById(roleId)
+    await role.setAuths(auth)
+    this.json({ message: '设置权限成功' })
   }
 }

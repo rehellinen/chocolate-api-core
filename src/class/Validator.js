@@ -4,7 +4,7 @@
  *  Create On 2018/10/12 21:21
  */
 import validator from 'validator'
-import { getParams, isFunction, toString } from '../utils'
+import {getParams, isFunction, isObject, toString} from '../utils'
 import { validateMap } from '../decorator'
 import { NotFound, ParamsException } from '../exception'
 
@@ -49,8 +49,9 @@ export class Validator {
     const allRules = validateMap.get(this.constructor.prototype)
     for (const key of keys) {
       this._key = key
-      this._value = toString(this.rawParams[key])
-
+      this._value = isObject(this.rawParams[key])
+        ? this.rawParams[key]
+        : toString(this.rawParams[key])
       const rules = allRules[key]
       // TODO：启动服务器之前检查场景中所以字段是否全都定义了规则
       if (!rules || rules.length === 0) {

@@ -1,8 +1,10 @@
-const { get, post, put, prefix, rest } = require('libs')
+const { get, post, put, del, prefix, rest } = require('libs')
 
 prefix('user', [
   get({
-    self: 'user.userGet' // 用户获取信息
+    self: 'user.userGet', // 用户获取信息
+    auth: 'user.userAuth', // 用户获取自己的所有权限
+    '/:id/auth': 'user.auth' // 管理员获取用户的所有权限
   }),
   post({
     login: 'user.login', // 登录
@@ -24,6 +26,8 @@ prefix('files', [
 ])
 
 prefix('role', [
+  get('/:roleId/auth', 'role.getAuth'), // 一个角色拥有的所有权限
+  post('/:roleId/auth', 'role.setAuth'), // 增加一个角色的权限
   rest('role')
 ])
 
