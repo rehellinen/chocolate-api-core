@@ -8,7 +8,14 @@ import { BaseModel } from './BaseModel'
 // TODO: Bug：软删除一个用户账户，再次添加会报错！
 export class UserModel extends BaseModel {
   static async login (params) {
-    const user = await this.getUserByAccount(params.account)
+    let user
+    try {
+      user = await this.getUserByAccount(params.account)
+    } catch (e) {
+      if (e instanceof NotFound) {
+        throw new NoAuthority({ message: '该账号不存在' })
+      }
+    }
     if (verifyPwd(params.password, user.password)) {
       return getTokens(user.id)
     } else {
