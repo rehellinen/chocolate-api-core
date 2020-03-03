@@ -1,5 +1,5 @@
 // 框架核心功能配置
-export default {
+export const config = {
   PORT: 3000,
   HOST: '127.0.0.1',
   DEBUG: true,

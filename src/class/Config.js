@@ -1,8 +1,3 @@
-/**
- *  Index.js
- *  Create By rehellinen
- *  Create On 2019/3/19 22:00
- */
 import { isProduction, rRoot } from '../utils/utils'
 
 class Config {
@@ -14,9 +9,9 @@ class Config {
    * @param dir 相对路径，相对于process.cwd()
    */
   load (dir = 'config') {
-    const baseConf = require(rRoot(`${dir}/base.conf`))['default']
-    const devConf = require(rRoot(`${dir}/dev.conf`))['default']
-    const prodConf = require(rRoot(`${dir}/prod.conf`))['default']
+    const baseConf = require(rRoot(`${dir}/base.conf`)).config
+    const devConf = require(rRoot(`${dir}/dev.conf`)).config
+    const prodConf = require(rRoot(`${dir}/prod.conf`)).config
     this.config = {
       ...baseConf,
       ...(isProduction ? prodConf : devConf)
