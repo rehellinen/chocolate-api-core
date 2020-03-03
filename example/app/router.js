@@ -34,4 +34,12 @@ prefix('auth', [
   rest('auth')
 ])
 
+prefix('mock', [
+  get({
+    count: 'mock.getCount',
+    progress: 'mock.getProgress',
+    image: 'mock.getImage'
+  })
+])
+
 
