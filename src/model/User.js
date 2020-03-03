@@ -134,8 +134,7 @@ export const initUserModel = (db) => {
     },
     account: {
       type: Sequelize.STRING(50),
-      allowNull: false,
-      unique: true
+      allowNull: false
     },
     password: {
       type: Sequelize.STRING(100),

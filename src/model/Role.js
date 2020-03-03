@@ -57,7 +57,6 @@ export const initRoleModel = (db) => {
     },
     desc: {
       type: Sequelize.STRING(50),
-      unique: true,
       allowNull: false
     },
     order: {
