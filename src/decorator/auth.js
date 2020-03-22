@@ -1,4 +1,4 @@
-import { InvalidToken, NoAuthority } from '../exception'
+import { InsufficientAuthority, InvalidToken, NoAuthority, NotFound } from '../exception'
 import { middleware } from './decorator'
 import { TokenType } from '../utils'
 import { AuthModel, UserModel } from '../model'
@@ -6,7 +6,7 @@ import { verifyToken } from '../class'
 
 const isAdmin = user => {
   if (!user.isAdmin) {
-    throw new NoAuthority({ message: '该用户不是超级管理员' })
+    throw new InsufficientAuthority({ message: '该用户不是超级管理员' })
   }
   return true
 }
@@ -18,14 +18,22 @@ const parseHeader = async (ctx, type = TokenType.ACCESS) => {
   const res = ctx.header.authorization.split(' ')
   const [prefix, token] = res
   if (res.length !== 2 || prefix.toLowerCase() !== 'bearer') {
-    throw new NoAuthority('头部解析错误')
+    throw new NoAuthority({ message: 'header解析错误' })
   }
 
   const payload = verifyToken(token)
   if (payload.type !== type) {
     throw new InvalidToken({ message: '令牌类型错误' })
   }
-  ctx.user = await UserModel.getUserById(payload.id)
+  try {
+    ctx.user = await UserModel.getUserById(payload.id)
+  } catch (e) {
+    if (e instanceof NotFound) {
+      throw new NoAuthority({ message: e.message })
+    } else {
+      throw e
+    }
+  }
 }
 
 // 只能为有效的refresh_token
@@ -62,19 +70,19 @@ export const auth = (auth) => {
     } else {
       const groupId = ctx.user.groupId
       if (!groupId) {
-        throw new NoAuthority({
+        throw new InsufficientAuthority({
           message: '该用户不属于任何权限组'
         })
       }
 
-      const res = new AuthModel().getOne({
-        condition: {
+      const res = await AuthModel.findOne({
+        where: {
           groupId,
           auth
         }
       })
       if (!res) {
-        throw new NoAuthority({
+        throw new InsufficientAuthority({
           message: '权限不足'
         })
       }
