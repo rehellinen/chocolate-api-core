@@ -113,7 +113,15 @@ export class User extends Controller {
   @login()
   async auth () {
     if (this.ctx.user.isAdmin) {
-      this.json({ message: '该用户为超级管理员，拥有所有权限' })
+      this.json({
+        message: '该用户为超级管理员，拥有所有权限',
+        data: [{
+          id: 1,
+          name: 'special_permission_of_super_admin',
+          desc: '超级管理员，拥有所有权限',
+          order: 0
+        }]
+      })
     }
 
     const roleId = this.ctx.user.roleId
