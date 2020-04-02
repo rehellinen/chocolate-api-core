@@ -13,6 +13,7 @@ prefix('user', [
     '/self/info': 'user.userUpdate', // 用户修改信息
     '/self/pwd': 'user.userPassword', // 用户修改密码
     '/self/avatar': 'user.avatar', // 用户修改头像
+    '/self/name': 'user.name', // 用户修改名称
     '/:id/password': 'user.password' // 管理员修改用户密码
   }),
   rest('user') // rest路由

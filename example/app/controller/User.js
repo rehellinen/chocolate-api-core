@@ -111,6 +111,14 @@ export class User extends Controller {
   }
 
   @login()
+  @validate('user.name')
+  async name () {
+    this.ctx.checkedParams.id = this.ctx.user.id
+    await UserModel.updateUser(this.ctx.checkedParams)
+    this.json({ message: '更新名称成功' })
+  }
+
+  @login()
   async auth () {
     if (this.ctx.user.isAdmin) {
       this.json({

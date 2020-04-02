@@ -7,7 +7,6 @@ const { rule, Validator, extend } = require('libs')
 const { Base } = require('./Base')
 
 @extend(Base)
-// TODO: isAdmin换成布尔值
 class User extends Validator {
   scene = {
     login: ['account', 'password'],
@@ -16,7 +15,8 @@ class User extends Validator {
     userUpdate: ['account', 'name', 'avatar', 'roleId'],
     password: ['id', 'password'],
     userPassword: ['oldPassword', 'newPassword'],
-    avatar: ['avatar']
+    avatar: ['avatar'],
+    name: ['name']
   }
 
   @rule('require', '名称不能为空')
