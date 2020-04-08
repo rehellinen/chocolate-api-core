@@ -35,6 +35,10 @@ prefix('auth', [
   rest('auth')
 ])
 
+prefix('article', [
+  rest('article')
+])
+
 prefix('mock', [
   get({
     count: 'mock.getCount',

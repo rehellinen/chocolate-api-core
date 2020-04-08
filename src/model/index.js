@@ -5,6 +5,7 @@ import { AuthModel } from './Auth'
 export * from './User'
 export * from './Auth'
 export * from './Role'
+export * from './Article'
 export * from './BaseModel'
 
 export const initRelation = () => {

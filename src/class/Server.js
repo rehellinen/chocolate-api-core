@@ -10,7 +10,7 @@ import { rCore, rRoot, warn } from '../utils'
 import { Controller } from './Controller'
 import { getConfig } from './Config'
 import { Exception } from '../exception'
-import { initUserModel, initRoleModel, initAuthModel, initRelation } from '../model'
+import { initUserModel, initRoleModel, initAuthModel, initArticleModel, initRelation } from '../model'
 
 export class Server {
   // Koa2实例
@@ -58,6 +58,7 @@ export class Server {
     initRoleModel(sequelize)
     initUserModel(sequelize)
     initAuthModel(sequelize)
+    initArticleModel(sequelize)
     initRelation(sequelize)
   }
 
@@ -79,11 +80,11 @@ export class Server {
 
   static processError (e) {
     if (e instanceof Exception) {
-      console.log(e)
+      // console.log(e)
       console.log(chalk.red(`Error: ${e.message}`))
     } else {
       console.log(e)
-      console.log(chalk.red(`Error: ${e.message}`))
+      // console.log(chalk.red(`Error: ${e.message}`))
     }
   }
 }
